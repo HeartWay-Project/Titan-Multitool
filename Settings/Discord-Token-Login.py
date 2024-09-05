@@ -1,30 +1,33 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     from selenium import webdriver
 except Exception as e:
-   ErrorModule(e)
+    ErrorModule(e)
 
 Title("Discord Token Login")
-try:      
+try:
     print()
     token = Choice1TokenDiscord()
 
-    print(f"""
-{secondary}[{primary}01{secondary}] {primary}->{secondary} Chrome (Windows / Linux)
-{secondary}[{primary}02{secondary}] {primary}->{secondary} Edge (Windows)
-{secondary}[{primary}03{secondary}] {primary}->{secondary} Firefox (Windows)
-    """)
-    browser = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Browser -> {reset}")
- 
+    print(tr('choose_browser'))
+    browser = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('input_browser')}{reset}")
+
     if browser in ['1', '01']:
         try:
             navigator = "Chrome"
-            print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {navigator} Starting..{primary}")
+            print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('starting').format(navigator)}{primary}")
             driver = webdriver.Chrome()
-            print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {navigator} Ready !{primary}")
+            print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {tr('ready').format(navigator)}{primary}")
         except:
-            print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {navigator} not installed or driver not up to date.")
+            print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('error_driver').format(navigator)}")
             Continue()
             Reset()
 
@@ -34,11 +37,11 @@ try:
         else:
             try:
                 navigator = "Edge"
-                print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {navigator} Starting..{primary}")
+                print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('starting').format(navigator)}{primary}")
                 driver = webdriver.Edge()
-                print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {navigator} Ready !{primary}")
+                print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {tr('ready').format(navigator)}{primary}")
             except:
-                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {navigator} not installed or driver not up to date.")
+                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('error_driver').format(navigator)}")
                 Continue()
                 Reset()
 
@@ -48,16 +51,16 @@ try:
         else:
             try:
                 navigator = "Firefox"
-                print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {navigator} Starting..{primary}")
+                print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('starting').format(navigator)}{primary}")
                 driver = webdriver.Firefox()
-                print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {navigator} Ready !{primary}")
+                print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {tr('ready').format(navigator)}{primary}")
             except:
-                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {navigator} not installed or driver not up to date.")
+                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('error_driver').format(navigator)}")
                 Continue()
                 Reset()
     else:
         ErrorChoice()
-    
+
     try:
         script = """
                 function login(token) {
@@ -69,17 +72,17 @@ try:
                 }, 2500);
                 }
                 """
-        
+
         driver.get("https://discord.com/login")
-        print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} Token Connection..{primary}")
+        print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('token_connection')}{primary}")
         driver.execute_script(script + f'\nlogin("{token}")')
         time.sleep(4)
-        print(f"{BEFORE + current_time_hour() + AFTER} {INFO} Connected Token !{primary}")
-        print(f"{BEFORE + current_time_hour() + AFTER} {INFO} If you leave the tool, edge will close!{primary}")
+        print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {tr('connected_token')}{primary}")
+        print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {tr('leave_tool_warning')}{primary}")
         Continue()
         Reset()
     except:
-        print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {navigator} not installed or driver not up to date.")
+        print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('error_driver').format(navigator)}")
         Continue()
         Reset()
 except Exception as e:

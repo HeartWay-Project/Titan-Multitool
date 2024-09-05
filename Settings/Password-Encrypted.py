@@ -1,5 +1,11 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 try:
     import bcrypt
@@ -20,12 +26,12 @@ try:
 {secondary}[{primary}06{secondary}] {primary}->{secondary} Base64 Encode
     """)
 
-    choice = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Encryption Method -> {reset}")
+    choice = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('CryptMethod')} -> {reset}")
 
     if choice not in ['1', '01', '2', '02', '3', '03', '4', '04', '5', '05', '6', '06']:
         ErrorChoice()
 
-    password = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Password to Encrypt -> {secondary}")
+    password = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('EncryptedPasswd')} -> {secondary}")
 
     def encrypt_password(choice, password):
         if choice in ['1', '01']:
@@ -34,56 +40,63 @@ try:
                 encrypted_password = bcrypt.hashpw(password.encode('utf-8'), salt)
                 return encrypted_password.decode('utf-8')
             except Exception as e:
-                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error encrypting with BCRYPT: {e}")
+                Error()
+                Continue()
         elif choice in ['2', '02']:
             try:
                 encrypted_password = hashlib.md5(password.encode('utf-8')).hexdigest()
                 return encrypted_password
             except Exception as e:
-                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error encrypting with MD5: {e}")
+                Error()
+                Continue()
         elif choice in ['3', '03']:
             try:
                 encrypted_password = hashlib.sha1(password.encode('utf-8')).hexdigest()
                 return encrypted_password
             except Exception as e:
-                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error encrypting with SHA-1: {e}")
+                Error()
+                Continue()
         elif choice in ['4', '04']:
             try:
                 encrypted_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
                 return encrypted_password
             except Exception as e:
-                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error encrypting with SHA-256: {e}")
+                Error()
+                Continue()
         elif choice in ['5', '05']:
             try:
                 salt = "this_is_a_salt".encode('utf-8')
                 encrypted_password = pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000).hex()
                 return encrypted_password
             except Exception as e:
-                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error encrypting with PBKDF2 (SHA-256): {e}")
+                Error()
+                Continue()
         elif choice in ['6', '06']:
             try:
                 encrypted_password = base64.b64encode(password.encode('utf-8')).decode('utf-8')
                 return encrypted_password
             except Exception as e:
-                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error encoding with Base64: {e}")
+                Error()
+                Continue()
         else:
             return None
 
     encrypted_password = encrypt_password(choice, password)
     if encrypted_password:
-        print(f"{BEFORE + current_time_hour() + AFTER} {ADD} Encrypted Password: {secondary}{encrypted_password}{reset}")
+        print(f"{BEFORE + current_time_hour() + AFTER} {ADD} {tr('EncryptPassword')}: {secondary}{encrypted_password}{reset}")
         
-        save_choice = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Do you want to save the encrypted password to a file? (yes/no) -> {reset}")
+        save_choice = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('SavePassEncrypted')} -> {reset}")
         
-        if save_choice.lower() in ['yes', 'y']:
-            file_name = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Enter the file name to save the encrypted password -> {reset}")
+        if save_choice.lower() in ['y', 'Y', 'Yes', 'YES', 'yes', 'o', 'O', 'Oui', 'OUI', 'oui']:
+            file_name = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('FileName')} -> {reset}")
             file_path = f"1-Output/PasswordEncrypted/{file_name}.txt"
             try:
                 with open(file_path, 'w') as file:
                     file.write(encrypted_password)
-                print(f"{BEFORE + current_time_hour() + AFTER} {ADD} Encrypted password saved to {file_path}{reset}")
+                print(f"{BEFORE + current_time_hour() + AFTER} {ADD} {tr('ConfirmPasswdSaved')} {file_path}{reset}")
             except Exception as e:
-                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error saving encrypted password to file: {e}")
+                Error()
+                Continue()
         
         Continue()
         Reset()

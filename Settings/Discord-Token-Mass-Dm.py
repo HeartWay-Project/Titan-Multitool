@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
     import threading
@@ -18,7 +25,7 @@ try:
                     print(f'{invalid}[{secondary}{current_time_hour()}{invalid}] {ADD} Status: {color.WHITE}Send{color.RED} | User: {color.WHITE}{user}{color.RED}')
 
                 except Exception as e:
-                    print(f'{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status: {color.WHITE}Error: {e}{color.RED}')
+                    print(f'{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status: {color.WHITE}{tr('Error')} {e}{color.RED}')
 
     print()
     token_discord = Choice1TokenDiscord()
@@ -32,7 +39,7 @@ try:
     processes = []
 
     try:
-        repetition = int(input(f"{color.RED}{INPUT} Number of Repetitions -> {color.RESET}"))
+        repetition = int(input(f"{color.RED}{INPUT} {tr('NumberRep')} -> {color.RESET}"))
     except:
         ErrorNumber()
 

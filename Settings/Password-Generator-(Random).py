@@ -1,9 +1,15 @@
 from Config.Config import *
 from Config.Util import *
+from Config.Translates import *
 import random
 import string
 import keyboard
 import os
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 def load_wordlists(filenames):
     word_list = []
@@ -85,7 +91,7 @@ def get_file_size_limit():
     print(f"{secondary}[{primary}2{secondary}] {primary}3Go")
     print(f"{secondary}[{primary}3{secondary}] {primary}5Go")
     print(f"{secondary}[{primary}4{secondary}] {primary}10Go")
-    choice = input(f"\n{INPUT} Choose file size -> {reset}")
+    choice = input(f"\n{INPUT} {tr('Choice')} -> {reset}")
     return sizes.get(choice, sizes['1'])
 
 def main():
@@ -99,19 +105,19 @@ def main():
         try:
             for word in word_list:
                 if current_file_size >= file_size_limit:
-                    print("\nFile size reached.")
+                    print(f"\n{tr('FileSizeReached')}.")
                     break
                 f.write(word + "\n")
                 current_file_size += len(word) + 1  
 
             while True:
                 if keyboard.is_pressed('esc'):  
-                    print("\nGeneration stopped by user.")
+                    print(f"\n{tr('ProgramStop')}.")
                     Continue()
                     Reset()
 
                 if current_file_size >= file_size_limit:
-                    print("\nFile size reached.")
+                    print(f"\n{tr('FileSizeReached')}.")
                     Continue()
                     Reset()
 
@@ -126,9 +132,8 @@ def main():
                 current_file_size += len(word_password) + len(numeric_password) + len(complex_password) + 3
 
         except Exception as e:
-            print(f"{ERROR} An error has occurred: {e}")
+            Error()
             Continue()
-            Reset()
         finally:
             f.close() 
 

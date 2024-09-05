@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
     from bs4 import BeautifulSoup
@@ -82,7 +89,7 @@ try:
                 visited_links.add(link)
 
     Slow(url_banner)
-    website_url = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} Website Url -> {reset}")
+    website_url = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('Website_url')} -> {reset}")
     Censored(website_url)
 
     if "https://" not in website_url and "http://" not in website_url:
@@ -90,11 +97,11 @@ try:
     domain = re.sub(r'^https?://', '', website_url).split('/')[0]
     
     print(f"""
-{secondary}[{invalid}01{secondary}] {invalid}->{secondary} Only "{website_url}"
-{secondary}[{invalid}02{secondary}] {invalid}->{secondary} All Website
+{secondary}[{primary}01{secondary}] {primary}->{secondary} {tr('Only')} "{website_url}"
+{secondary}[{primary}02{secondary}] {primary}->{secondary} {tr('All_Website')}
     """)
 
-    choice = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Choice -> {reset}")
+    choice = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('Choice')} -> {reset}")
     print()
 
     if choice in ['1', '01']:

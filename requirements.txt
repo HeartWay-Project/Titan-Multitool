@@ -38,6 +38,7 @@ pymediainfo
 pyperclip
 pypiwin32
 PyQt5
+PyQtWebEngine
 pyttsx3
 requests
 requests-toolbelt

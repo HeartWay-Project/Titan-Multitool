@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import bcrypt
     import hashlib
@@ -22,23 +29,23 @@ try:
 {secondary}[{primary}06{secondary}] {primary}->{secondary} Base64 Decode
     """)
 
-    choice = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Encryption Method -> {reset}")
+    choice = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('EncryptMetod')} -> {reset}")
 
     if choice not in ['1', '01', '2', '02', '3', '03', '4', '04', '5', '05', '6', '06']:
         ErrorChoice()
 
-    encrypted_password = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Encrypted Password -> {secondary}")
+    encrypted_password = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('EncryptPassword')} -> {secondary}")
     try:
-        threads_number = int(input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Threads Number -> {secondary}"))
+        threads_number = int(input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('ThreadsNumber')} -> {secondary}"))
     except:
         ErrorNumber()
     try:
-        characters_number = int(input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Password Characters Number Max -> {secondary}"))
+        characters_number = int(input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('PasswordCharacters')} -> {secondary}"))
     except:
         ErrorNumber()
 
     Title(f"Password Decrypted - Encrypted Password: {encrypted_password}")
-    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} Password cracking by brute force.. (very long depending on the number of characters){reset}")
+    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('PasswordCrackBrute')}{reset}")
 
     password = False
     generated_passwords = set()
@@ -61,7 +68,7 @@ try:
             encryption = "PBKDF2 (SHA-256)"
         elif choice in ['6', '06']:
             encryption = "Base64 Decode"
-        print(f'{BEFORE + current_time_hour() + AFTER} {ERROR} The encryption "{secondary}{encrypted_password}{primary}" is not accepted by "{secondary}{encryption}{primary}".')
+        print(f'{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('Encryption')} "{secondary}{encrypted_password}{primary}" {tr('NotAccept')} "{secondary}{encryption}{primary}".')
         Continue()
         Reset()
 
@@ -111,7 +118,7 @@ try:
                 generated_passwords.add(password_test)
                 if check_password(password_test):
                     password = True
-                    print(f'{BEFORE + current_time_hour() + AFTER} {ADD} Password: {secondary}{password_test}{reset}')
+                    print(f'{BEFORE + current_time_hour() + AFTER} {ADD} {tr('Password')}: {secondary}{password_test}{reset}')
                     time.sleep(1)
                     Continue()
                     Reset()

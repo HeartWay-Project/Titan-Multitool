@@ -1,6 +1,12 @@
 import os
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 try:
     import keyboard
@@ -21,16 +27,16 @@ os.makedirs(output_dir, exist_ok=True)
 output_file = os.path.join(output_dir, "valid_nitros.txt")
 
 def prompt_webhook():
-    webhook = input(f"{primary}\n{INPUT} Webhook ? (y/n) -> {reset}").lower()
+    webhook = input(f"{primary}\n{INPUT} {tr('WebhookYN')} -> {reset}").lower()
     if webhook in ['y', 'yes']:
-        webhook_url = input(f"\n{primary}{INPUT} Webhook URL -> {reset}")
+        webhook_url = input(f"\n{primary}{INPUT} {tr('URLWebhook')} -> {reset}")
         CheckWebhook(webhook_url)
         return webhook_url
     return None
 
 def get_threads_number():
     try:
-        return int(input(f"\n{INPUT} Threads Number -> {reset}"))
+        return int(input(f"\n{INPUT} {tr('ThreadsNumber')} -> {reset}"))
     except ValueError:
         ErrorNumber()
         return get_threads_number()
@@ -97,7 +103,7 @@ def main():
             global stop_threads
             keyboard.wait('esc')
             stop_threads = True
-            print(f"{invalid}\nGénération arrêtée par l'utilisateur.{reset}")
+            print(f"{invalid}\n{tr('ProgramStop')}.{reset}")
 
         esc_thread = threading.Thread(target=monitor_escape_key)
         esc_thread.start()

@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
     import threading
@@ -11,8 +18,8 @@ Title("Discord Token Spammer")
 try:
     print()
     token = Choice1TokenDiscord()
-    channel = input(f"{color.RED}{INPUT} Channel Spam Id -> {color.RESET}")
-    message = input(f"{color.RED}{INPUT} Spam Message -> {color.RESET}")
+    channel = input(f"{primary}{INPUT} {tr('ChannelSpamID')} -> {color.RESET}")
+    message = input(f"{primary}{INPUT} {tr('SpamMessage')} -> {color.RESET}")
     message_len = len(message)
     if message_len > 10:
         message_sensur = message[:10]
@@ -20,7 +27,7 @@ try:
     else:
         message_sensur = message
     try:
-        threads_number = int(input(f"{INPUT} Threads Number (recommended: 2, 4) -> {color.RESET}"))
+        threads_number = int(input(f"{INPUT} {tr('ThreadsNumber')} (recommended: 2, 4) -> {color.RESET}"))
     except:
         ErrorNumber()
 
@@ -35,9 +42,9 @@ try:
                 }
             )
             response.raise_for_status()
-            print(f"{valid}[{secondary}{current_time_hour()}{valid}] {GEN_VALID} Message: {color.WHITE}{message_sensur}{color.GREEN} | Channel: {color.WHITE}{channel}{color.GREEN} | Status: {color.WHITE}Send{color.GREEN}")
+            print(f"{valid}[{secondary}{current_time_hour()}{valid}] {GEN_VALID} Message: {color.WHITE}{message_sensur}{color.GREEN} | {tr('Channel')}: {color.WHITE}{channel}{color.GREEN} | Status: {color.WHITE}Send{color.GREEN}")
         except:
-            print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {GEN_INVALID} Message: {color.WHITE}{message_sensur}{color.RED} | Channel: {color.WHITE}{channel}{color.RED} | Status: {color.WHITE}Error {response.status_code}{color.RED}")
+            print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {GEN_INVALID} Message: {color.WHITE}{message_sensur}{color.RED} | {tr('Channel')}: {color.WHITE}{channel}{color.RED} | Status: {color.WHITE}{tr('Error')} {response.status_code}{color.RED}")
 
     def request():
         threads = []

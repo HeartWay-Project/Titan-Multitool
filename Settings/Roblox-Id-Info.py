@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
 except Exception as e:
@@ -10,7 +17,7 @@ Title("Roblox User Info")
 
 try:
     user_id = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} ID -> {color.RESET}")
-    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} Information Recovery..{reset}")
+    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('tool_infos_recovery')}{reset}")
     try:
 
         user_info_response = requests.get(f"https://users.roblox.com/v1/users/{user_id}")
@@ -57,14 +64,14 @@ try:
             has_verified_badge = "None"
 
         print(f"""
-    {INFO_ADD} Username       : {secondary}{username}{invalid}
-    {INFO_ADD} Id             : {secondary}{userid}{invalid}
-    {INFO_ADD} Display Name   : {secondary}{display_name}{invalid}
-    {INFO_ADD} Description    : {secondary}{description}{invalid}
-    {INFO_ADD} Created        : {secondary}{created_at}{invalid}
-    {INFO_ADD} Banned         : {secondary}{is_banned}{invalid}
-    {INFO_ADD} External Name  : {secondary}{external_app_display_name}{invalid}
-    {INFO_ADD} Verified Badge : {secondary}{has_verified_badge}{invalid}
+    {INFO_ADD} {tr('Username')}       : {secondary}{username}{primary}
+    {INFO_ADD} Id             : {secondary}{userid}{primary}
+    {INFO_ADD} {tr('DisplayName')}   : {secondary}{display_name}{primary}
+    {INFO_ADD} Description    : {secondary}{description}{primary}
+    {INFO_ADD} {tr('Created')}        : {secondary}{created_at}{primary}
+    {INFO_ADD} {tr('Banned')}         : {secondary}{is_banned}{primary}
+    {INFO_ADD} External Name  : {secondary}{external_app_display_name}{primary}
+    {INFO_ADD} {tr('VerifBadge')} : {secondary}{has_verified_badge}{primary}
     """)
         Continue()
         Reset()

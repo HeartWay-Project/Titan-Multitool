@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
 except Exception as e:
@@ -31,11 +38,11 @@ try:
             response = requests.post(f"https://discord.com/api/v9/invites/{invite_code}", headers=headers)
             
             if response.status_code == 200:
-                print(f"\n{invalid}[{secondary}{current_time_hour()}{invalid}] {ADD} Status: {color.WHITE}Joined{color.RED} | Server: {color.WHITE}{server_name}{color.RED}\n")
+                print(f"\n{primary}[{secondary}{current_time_hour()}{primary}] {ADD} Status: {color.WHITE}Joined{primary} | Server: {color.WHITE}{server_name}{primary}\n")
             else:
-                print(f"\n{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status: {color.WHITE}Error {response.status_code}{color.RED} | Server: {color.WHITE}{server_name}{color.RED}\n")
+                print(f"\n{primary}[{secondary}{current_time_hour()}{primary}] {ERROR} Status: {color.WHITE}{tr('Error')} {response.status_code}{color.RED} | Server: {color.WHITE}{server_name}{color.RED}\n")
     except:
-        print(f"\n{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status: {color.WHITE}Error{color.RED} | Server: {color.WHITE}{server_name}{color.RED}\n")
+        print(f"\n{primary}[{secondary}{current_time_hour()}{primary}] {ERROR} Status: {color.WHITE}{tr('Error')}{primary} | Server: {color.WHITE}{server_name}{primary}\n")
 
     Continue()
     Reset()

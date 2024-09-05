@@ -14,8 +14,8 @@ logging.getLogger('discord.ext.commands.bot').setLevel(logging.ERROR)
 logging.basicConfig(level=logging.WARNING)
 
 intents = discord.Intents.default()
-intents.guilds = True  # Permet au bot d'accéder aux informations sur les guildes (serveurs)
-intents.members = True  # Permet au bot d'accéder aux informations sur les membres du serveur
+intents.guilds = True
+intents.members = True
 intents.message_content = True
 
 async def get_bot_info(token):

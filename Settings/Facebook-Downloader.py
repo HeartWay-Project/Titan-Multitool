@@ -1,7 +1,13 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
 import yt_dlp
 import os
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 def télécharger_vidéo_facebook(url):
     try:
@@ -15,12 +21,12 @@ def télécharger_vidéo_facebook(url):
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
-        print(f"\n{BEFORE + current_time_hour() + AFTER}{INFO} {primary}Téléchargement terminé !")
+        print(f"\n{BEFORE + current_time_hour() + AFTER}{INFO} {primary}{tr('DownloadDone')}")
         Continue()
         Reset()
     except Exception as e:
         Error(e)
 
 if __name__ == "__main__":
-    url = input(f"\n{primary}{INPUT} URL de la vidéo Facebook -> {reset}")
+    url = input(f"\n{primary}{INPUT} {tr('URLVideo')} -> {reset}")
     télécharger_vidéo_facebook(url)

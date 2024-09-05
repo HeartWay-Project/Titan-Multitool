@@ -27,7 +27,7 @@ def check_ext_merge(args):
 def verif_path(file):        
     if not path.isfile(file):
         print(Fore.RED + f"[!] Error: File '{file}' does not exist.")
-        exit(1) # Arrêt du programme s'il n'existe pas
+        exit(1)
 
 
 def verif_nb_permutation(permutation, passwords, only_mode_activated):

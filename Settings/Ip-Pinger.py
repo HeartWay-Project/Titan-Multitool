@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import threading
     import time
@@ -24,7 +31,7 @@ try:
         else:
             bytes = 64
 
-        threads_input = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Threads (enter for default) -> {color.RESET}")
+        threads_input = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('ThreadsNumber')} (enter for default) -> {color.RESET}")
         if threads_input.strip():
             threads_number = threads_input
         else:

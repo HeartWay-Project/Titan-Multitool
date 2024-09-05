@@ -3,30 +3,36 @@ import os
 import sys
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
 
-# Charger les mots de passe communs à partir d'un fichier
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
+
 def load_common_passwords(file_path):
     if not os.path.exists(file_path):
-        print(f"Erreur : Le fichier {file_path} n'existe pas.")
+        print(f"{tr('Error')} {tr('File')} {file_path} {tr('NotExist')}")
         sys.exit(1)
     with open(file_path, 'r') as file:
         common_passwords = file.read().splitlines()
     return common_passwords
 
-# Charger les mots du dictionnaire à partir d'un fichier
+
 def load_dictionary(file_path):
     if not os.path.exists(file_path):
-        print(f"Erreur : Le fichier {file_path} n'existe pas.")
+        print(f"{tr('Error')} {tr('File')} {file_path} {tr('NotExist')}")
         sys.exit(1)
     with open(file_path, 'r') as file:
         dictionary_words = file.read().splitlines()
     return dictionary_words
 
-# Vérifier la présence de motifs répétitifs ou séquentiels
+
 def has_repetitive_or_sequential_patterns(password):
     return re.search(r'(.)\1{2,}', password) or re.search(r'012|123|234|345|456|567|678|789|890', password)
 
-# Vérifier la présence de séquences de caractères
+
 def has_sequential_characters(password):
     sequences = [
         'abcdefghijklmnopqrstuvwxyz',
@@ -44,39 +50,29 @@ def has_sequential_characters(password):
             return True
     return False
 
-# Évaluer la force du mot de passe
+
 def evaluate_password_strength(password, common_passwords, dictionary_words):
-    # Initialize base scores
+
     length_score = len(password) * 1.5
     upper_case_score = len(re.findall(r'[A-Z]', password)) * 1.5
     lower_case_score = len(re.findall(r'[a-z]', password)) * 1
     digit_score = len(re.findall(r'\d', password)) * 1.5
     special_char_score = len(re.findall(r'[\W_]', password)) * 2
     
-    # Total score
+
     total_score = length_score + upper_case_score + lower_case_score + digit_score + special_char_score
     
-    # Penalty for common passwords
+
     if password in common_passwords:
-        total_score -= 40  # Increase penalty for common passwords
-
-    # Penalty for dictionary words
+        total_score -= 40 
     if password.lower() in dictionary_words:
-        total_score -= 25  # Increase penalty for dictionary words
-
-    # Penalty for repetitive or sequential patterns
+        total_score -= 25  
     if has_repetitive_or_sequential_patterns(password):
-        total_score -= 20  # Increase penalty for repetitive patterns
-
-    # Penalty for sequential characters
+        total_score -= 20  
     if has_sequential_characters(password):
-        total_score -= 20  # Penalty for sequential characters
-
-    # Penalty for short passwords
+        total_score -= 20  
     if len(password) < 8:
-        total_score -= 20  # Penalty for passwords shorter than 8 characters
-
-    # Scale score to a maximum of 100
+        total_score -= 20  
     max_score = 100
     score_percentage = min(max(total_score, 0), max_score)
     
@@ -136,22 +132,22 @@ def main():
     default_common_passwords_file = '2-Input/Passwords/common_passwords.txt'
     default_dictionary_file = '2-Input/Passwords/dictionary.txt'
     
-    # Utiliser des chemins spécifiés par ligne de commande si présents
+
     common_passwords_file = sys.argv[1] if len(sys.argv) > 1 else default_common_passwords_file
     dictionary_file = sys.argv[2] if len(sys.argv) > 2 else default_dictionary_file
     
-    # Charger les mots de passe communs et les mots du dictionnaire
+
     common_passwords = load_common_passwords(common_passwords_file)
     dictionary_words = load_dictionary(dictionary_file)
     
-    password = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} Password to evaluate -> {reset}")
+    password = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('PassEvaluate')} -> {reset}")
     
     strength, color, score_percentage = evaluate_password_strength(password, common_passwords, dictionary_words)
     time_to_crack = estimate_brute_force_time(password)
     
-    print(f"\nPassword Strength: {strength}")
+    print(f"\n{tr('PassStrength')}: {strength}")
     print(display_progress_bar(score_percentage))
-    print(f"\n{BEFORE + current_time_hour() + AFTER} {WAIT} Estimated time to crack the password: {reset}\n")
+    print(f"\n{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('TimeCrackPass')}: {reset}\n")
     for unit, time in time_to_crack.items():
         print(f"{BEFORE + current_time_hour() + AFTER}{primary}{unit.capitalize()}: {secondary}{time:.2e}\n")
 

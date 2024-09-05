@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
     import json
@@ -51,7 +58,7 @@ try:
 
     print(f"""
     {INFO_ADD} Status        : {secondary}{status}{invalid}
-    {INFO_ADD} Username      : {secondary}{username_roblox}{invalid}
+    {INFO_ADD} {tr('Username')}      : {secondary}{username_roblox}{invalid}
     {INFO_ADD} Id            : {secondary}{user_id_roblox}{invalid}
     {INFO_ADD} Robux         : {secondary}{robux_roblox}{invalid}
     {INFO_ADD} Premium       : {secondary}{premium_roblox}{invalid}

@@ -1,5 +1,11 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 try:
     from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
@@ -35,22 +41,22 @@ def decrypt_file(encrypted_file_content, password):
 
 try:
     Slow(f"""{encrypted_banner}
-{secondary}[{primary}01{secondary}] {primary}->{secondary} Decrypt a file (AES)
+{secondary}[{primary}01{secondary}] {primary}->{secondary} {tr('DecryptFile')}
     """)
 
-    choice = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Choose an option -> {reset}")
+    choice = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('Chose')} -> {reset}")
 
     if choice not in ['1', '01']:
         ErrorChoice()
 
-    file_path = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Path to file to Decrypt -> {secondary}")
-    password = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Password for Decryption -> {secondary}")
+    file_path = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('PathToDecrypt')} -> {secondary}")
+    password = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('PasswdForDecrypt')} -> {secondary}")
 
     try:
         with open(file_path, 'rb') as file:
             encrypted_file_content = file.read()
     except Exception as e:
-        print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error reading file: {e}")
+        print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorReadFile')}: {e}")
         raise e
 
     try:
@@ -63,9 +69,9 @@ try:
         with open(decrypted_file_path, 'wb') as file:
             file.write(decrypted_content)
         
-        print(f"{BEFORE + current_time_hour() + AFTER} {ADD} Decrypted file content saved to {decrypted_file_path}{reset}")
+        print(f"{BEFORE + current_time_hour() + AFTER} {ADD} {tr('DecryptedContent')} {decrypted_file_path}{reset}")
     except Exception as e:
-        print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error decrypting file content: {e}")
+        print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorDecrypt')} {e}")
 
     Continue()
     Reset()

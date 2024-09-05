@@ -1,7 +1,13 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
 import os
 import marshal
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 def obfuscate_code(source_code, chunk_size=100):
     compiled_code = compile(source_code, '<string>', 'exec')
@@ -21,7 +27,7 @@ def obfuscate_code(source_code, chunk_size=100):
     return obfuscated_code
 
 def main():
-    source_file = input(f"\n{INPUT} Path of the file to obfuscate -> {reset}")
+    source_file = input(f"\n{INPUT} {tr('PathToObf')} -> {reset}")
 
     with open(source_file, 'r', encoding='utf-8') as f:
         source_code = f.read()
@@ -38,7 +44,7 @@ def main():
     with open(obfuscated_file_path, 'w', encoding='utf-8') as f:
         f.write(obfuscated_code)
 
-    print(f"\n{INFO} File successfully obfuscated in: {reset}{obfuscated_file_path}")
+    print(f"\n{INFO} {tr('ObfSucces')} {reset}{obfuscated_file_path}")
     Continue()
     Reset()
 

@@ -12,13 +12,13 @@ except Exception as e:
 Title("Ip Generator")
 
 try:
-    webhook = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} Webhook ? (y/n) -> {reset}")
-    if webhook in ['y', 'Y', 'Yes', 'yes', 'YES']:
+    webhook = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('WebhookYN')} -> {reset}")
+    if webhook in ['y', 'Y', 'Yes', 'yes', 'YES', 'o', 'O', 'Oui', 'OUI', 'oui']:
         webhook_url = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Webhook URL -> {reset}")
         CheckWebhook(webhook_url)
 
     try:
-        threads_number = int(input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Threads Number -> {reset}"))
+        threads_number = int(input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('ThreadsNumber')} -> {reset}"))
     except:
         ErrorNumber()
 
@@ -65,16 +65,16 @@ try:
                     }
                     }
                     send_webhook(embed_content)
-                    print(f"{valid}[{secondary}{current_time_hour()}{valid}] {GEN_VALID} Logs: {color.WHITE}{number_invalid} invalid - {number_valid} valid{color.RED} | Status:  {color.WHITE}Valid{color.GREEN}  | Ip: {color.WHITE}{ip}{color.GREEN}")
+                    print(f"{valid}[{secondary}{current_time_hour()}{valid}] {GEN_VALID} Logs: {color.WHITE}{number_invalid} invalid - {number_valid} valid{primary} | Status:  {color.WHITE}Valid{color.GREEN}  | Ip: {color.WHITE}{ip}{color.GREEN}")
                 else:
-                    print(f"{valid}[{secondary}{current_time_hour()}{valid}] {GEN_VALID} Logs: {color.WHITE}{number_invalid} invalid - {number_valid} valid{color.RED} | Status:  {color.WHITE}Valid{color.GREEN}  | Ip: {color.WHITE}{ip}{color.GREEN}")
+                    print(f"{valid}[{secondary}{current_time_hour()}{valid}] {GEN_VALID} Logs: {color.WHITE}{number_invalid} invalid - {number_valid} valid{primary} | Status:  {color.WHITE}Valid{color.GREEN}  | Ip: {color.WHITE}{ip}{color.GREEN}")
                 
             else:
                 number_invalid += 1
-                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {GEN_INVALID} Logs: {color.WHITE}{number_invalid} invalid - {number_valid} valid{color.RED} | Status: {color.WHITE}Invalid{color.RED} | Ip: {color.WHITE}{ip}{color.RED}")
+                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {GEN_INVALID} Logs: {color.WHITE}{number_invalid} invalid - {number_valid} valid{primary} | Status: {color.WHITE}Invalid{primary} | Ip: {color.WHITE}{ip}{color.BLUE}")
         except:
             number_invalid += 1
-            print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {GEN_INVALID} Logs: {color.WHITE}{number_invalid} invalid - {number_valid} valid{color.RED} | Status: {color.WHITE}Invalid{color.RED} | Ip: {color.WHITE}{ip}{color.RED}")
+            print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {GEN_INVALID} Logs: {color.WHITE}{number_invalid} invalid - {number_valid} valid{primary} | Status: {color.WHITE}Invalid{primary} | Ip: {color.WHITE}{ip}{color.BLUE}")
         Title(f"Ip Generator - Invalid: {number_invalid} - Valid: {number_valid}")
 
     def request():

@@ -1,5 +1,11 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 try:
     import random
@@ -18,13 +24,13 @@ running = True
 def stop_program():
     global running
     running = False
-    print("Program stopped.")
+    print(f"{tr('ProgramStop')}.")
 
 keyboard.add_hotkey('esc', stop_program)  # Ajout d'un raccourci pour la touche Échap
 
 try:
     try:
-        threads_number = int(input(f"\n{INPUT} Threads Number -> {color.RESET}"))
+        threads_number = int(input(f"\n{INPUT} {tr('ThreadsNumber')} -> {color.RESET}"))
     except:
         ErrorNumber()
 

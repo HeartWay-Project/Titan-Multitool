@@ -15,11 +15,10 @@ def mode_config(passwords,mode,combination_length, nb_symbol, nb_digit, first_up
 
     elif mode=="advanced":
         verif_max_for_mode(passwords, "advanced")
-        #print(Fore.LIGHTMAGENTA_EX + "[?] Be careful with this mode, it drastically increases the size of the wordlist and the generation time.")
         combination_length = 2
         nb_symbol = 4
         nb_digit = 4
-        first_upper= False # False car nb_all_maj =! None ou 0, c'est logique
+        first_upper= False
         nb_all_maj= 3
         lowercase=True
         character="1"
@@ -27,11 +26,10 @@ def mode_config(passwords,mode,combination_length, nb_symbol, nb_digit, first_up
 
     elif mode=="deep":
         verif_max_for_mode(passwords, "deep")
-        #print(Fore.LIGHTMAGENTA_EX + "[?] Be careful with this mode, it drastically increases the size of the wordlist and the generation time.")
         combination_length = 3
         nb_symbol = 10
         nb_digit = 10
-        first_upper= False # False car nb_all_maj =! None ou 0, c'est logique
+        first_upper= False
         nb_all_maj= 10
         lowercase=True
         character="1"

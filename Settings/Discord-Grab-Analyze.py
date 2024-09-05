@@ -4,11 +4,16 @@ import requests
 import colorama
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 Title(f"PC Grab Analyze")
 
 def find_python_files():
-    """Récupère tous les fichiers Python sur le PC."""
     python_files = []
     for root, _, files in os.walk('/'):
         for file in files:
@@ -17,7 +22,6 @@ def find_python_files():
     return python_files
 
 def scan_file_for_webhook(file_path):
-    """Vérifie si le fichier contient un webhook Discord."""
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
             content = file.read()
@@ -29,8 +33,7 @@ def scan_file_for_webhook(file_path):
     return False
 
 def generate_report(files_status):
-    """Génère un rapport des fichiers analysés avec leur statut."""
-    report = f"{secondary}Rapport d'analyse des fichiers Python:\n{reset}"
+    report = f"{secondary}{tr('AnalyzeRapport')}\n{reset}"
     safe_files = [file for file, status in files_status.items() if status == "safe"]
     suspect_files = [file for file, status in files_status.items() if status == "suspect"]
     
@@ -43,8 +46,7 @@ def generate_report(files_status):
     return report
 
 def ask_for_confirmation():
-    """Demande à l'utilisateur s'il souhaite lancer l'analyse."""
-    response = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} Do you want to start the analysis? (y/n) -> {reset}").strip().lower()
+    response = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('StartAnalyze')} -> {reset}").strip().lower()
     return response == 'y'
 
 def main():
@@ -64,7 +66,7 @@ def main():
         Continue()
         Reset()
     else:
-        print(f"{primary}Analyse annulée par l'utilisateur.{reset}")
+        print(f"{primary}{tr('AnalysisCancel')}.{reset}")
 
 if __name__ == "__main__":
     try:

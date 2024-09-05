@@ -6,7 +6,6 @@ import subprocess
 import uuid
 import ctypes
 
-# Variables globales pour stocker les valeurs d'origine
 original_hwid = None
 original_mac = {}
 
@@ -57,7 +56,7 @@ def change_hwid():
             return
         
         if original_hwid is None:
-            original_hwid = get_current_hwid()  # Sauvegarde du HWID original
+            original_hwid = get_current_hwid()
         print(f"\n{BEFORE + current_time_hour() + AFTER}{INFO} Changing HWID :")
         new_hwid = str(uuid.uuid4())
         try:
@@ -89,7 +88,7 @@ def show_current_addresses(interface: str):
     global original_mac
 
     if interface not in original_mac:
-        original_mac[interface] = get_current_mac(interface)  # Sauvegarde de la MAC originale
+        original_mac[interface] = get_current_mac(interface)
 
     print(f"\n{INFO} Current Addresses:{secondary}\n")
     print(f"{INFO} MAC Address ({interface}): {secondary}{get_current_mac(interface)}")

@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
     import threading
@@ -28,9 +35,9 @@ try:
                     headers={'Authorization': token},
                     json={"type": 2}
                 )
-                print(f"\n{primary}[{secondary}{current_time_hour()}{primary}] {ADD} Status: {color.WHITE}Blocked{color.RED} | User: {color.WHITE}{friend['user']['username']}#{friend['user']['discriminator']}")
+                print(f"\n{primary}[{secondary}{current_time_hour()}{primary}] {ADD} Status: {color.WHITE}{tr('Blocked')}{primary} | {tr('User')}: {color.WHITE}{friend['user']['username']}#{friend['user']['discriminator']}")
             except Exception as e:
-                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status: {color.WHITE}Error: {e}{color.RED}")
+                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status: {color.WHITE}{tr('Error')}: {e}{primary}")
 
     friends_list = requests.get(
         "https://discord.com/api/v9/users/@me/relationships",
@@ -38,13 +45,13 @@ try:
     ).json()
 
     if not friends_list:
-        print(f"{INFO} No friends found.")
+        print(f"{INFO} {tr('NoFriends')}.")
         Continue()
         Reset()
 
-    print(f"\n{secondary}[{primary}1{secondary}] {primary}Bloquer tous les amis")
-    print(f"{secondary}[{primary}2{secondary}] {primary}Bloquer un seul ami")
-    choice = input(f"\n{INPUT} Choose an option -> {reset}").strip()
+    print(f"\n{secondary}[{primary}1{secondary}] {primary}{tr('BlockAll')}")
+    print(f"{secondary}[{primary}2{secondary}] {primary}{tr('BlockOne')}")
+    choice = input(f"\n{INPUT} {tr('Choice')} -> {reset}").strip()
 
     if choice == "1":
         processes = []
@@ -57,21 +64,21 @@ try:
             process.join()
 
     elif choice == "2":
-        print(f"\n{BEFORE + current_time_hour() + AFTER} Friends List :\n")
+        print(f"\n{BEFORE + current_time_hour() + AFTER} {tr('FriendsList')} :\n")
         for idx, friend in enumerate(friends_list):
             username = friend['user']['username']
             discriminator = friend['user']['discriminator']
             print(f"{secondary}[{primary}{idx + 1}{secondary}] {primary} -> {secondary}{username}#{discriminator}")
         
-        friend_choice = int(input(f"\n{INPUT} Enter the friend to block -> ").strip()) - 1
+        friend_choice = int(input(f"\n{INPUT} {tr('FriendsBlock')} -> ").strip()) - 1
         
         if 0 <= friend_choice < len(friends_list):
             selected_friend = [friends_list[friend_choice]]
             BlockFriends(token, selected_friend)
         else:
-            print(f"{ERROR} Invalid number.")
+            ErrorNumber()
     else:
-        print(f"{ERROR} Invalid option.")
+        ErrorChoice()
 
     Continue()
     Reset()

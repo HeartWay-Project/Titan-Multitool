@@ -1,5 +1,11 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 try:
     import requests
@@ -65,14 +71,14 @@ try:
             has_verified_badge = "None"
 
         print(f"""
-    {INFO_ADD} Username       : {secondary}{username}{invalid}
+    {INFO_ADD} {tr('Username')}       : {secondary}{username}{invalid}
     {INFO_ADD} Id             : {secondary}{userid}{invalid}
-    {INFO_ADD} Display Name   : {secondary}{display_name}{invalid}
+    {INFO_ADD} {tr('DisplayName')}   : {secondary}{display_name}{invalid}
     {INFO_ADD} Description    : {secondary}{description}{invalid}
-    {INFO_ADD} Created        : {secondary}{created_at}{invalid}
-    {INFO_ADD} Banned         : {secondary}{is_banned}{invalid}
+    {INFO_ADD} {tr('Created')}        : {secondary}{created_at}{invalid}
+    {INFO_ADD} {tr('Banned')}         : {secondary}{is_banned}{invalid}
     {INFO_ADD} External Name  : {secondary}{external_app_display_name}{invalid}
-    {INFO_ADD} Verified Badge : {secondary}{has_verified_badge}{invalid}
+    {INFO_ADD} {tr('VerifBadge')} : {secondary}{has_verified_badge}{invalid}
     """)
         Continue()
         Reset()

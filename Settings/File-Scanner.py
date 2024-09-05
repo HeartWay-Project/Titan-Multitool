@@ -1,9 +1,15 @@
+from Config.Util import *
+from Config.Config import *
+from Config.Translates import *
 import requests
 import time
 import sys
 import os
-from Config.Util import *
-from Config.Config import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 def load_api_key(file_path):
     with open(file_path, 'r') as file:

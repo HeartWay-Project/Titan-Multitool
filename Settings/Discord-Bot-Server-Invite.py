@@ -79,7 +79,7 @@ async def main():
 
             await bot.start(chosen_token)
     else:
-        print("Invalid Token.")
+        print(f"Invalid Token.")
         Continue()
         Reset()
 

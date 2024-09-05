@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import socket
     import requests
@@ -84,21 +91,21 @@ try:
             return None
 
     Slow(scan_banner)
-    website_url = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} Website Url -> {reset}")
+    website_url = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('Website_url')} -> {reset}")
     Censored(website_url)
         
-    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} Scanning..{reset}\n")
+    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('Scan')}{reset}\n")
 
     if "https://" not in website_url and "http://" not in website_url:
         website_url = "https://" + website_url
 
-    print(f"    {INFO_ADD} Website     : {secondary}{website_url}{invalid}")
+    print(f"    {INFO_ADD} {tr('Web_Site')}     : {secondary}{website_url}{invalid}")
 
     domain = domain_scan(website_url)
-    print(f"    {INFO_ADD} Domain      : {secondary}{domain}{invalid}")
+    print(f"    {INFO_ADD} {tr('Domain')}      : {secondary}{domain}{invalid}")
 
     secure = secure_scan(website_url)
-    print(f"    {INFO_ADD} Secure      : {secondary}{secure}{invalid}")
+    print(f"    {INFO_ADD} {tr('Secure')}      : {secondary}{secure}{invalid}")
 
     status_code = status_scan(website_url)
     print(f"    {INFO_ADD} Status Code : {secondary}{status_code}{invalid}")
@@ -111,7 +118,7 @@ try:
     {INFO_ADD} Host As     : {secondary}{host_as}{invalid}""")
 
     open_port = port_scan(ip)
-    print(f"    {INFO_ADD} Open Port   : {secondary}{open_port}{reset}")
+    print(f"    {INFO_ADD} {tr('Open_Ports')}   : {secondary}{open_port}{reset}")
 
     print()
     Continue()

@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
    import socket
    import concurrent.futures
@@ -18,7 +25,7 @@ try:
                 print(f"{BEFORE + current_time_hour() + AFTER} {ADD} Ip: {secondary}{ip}{primary} | Status: {secondary}Open{primary} | Port: {secondary}{port}")
             sock.close()
         except Exception as e:
-            print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error: {secondary}{e}")
+            print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('Error')} {secondary}{e}")
             return
 
     def scan_ports(ip, start_port, end_port):
@@ -26,7 +33,7 @@ try:
             results = {executor.submit(scan_port, ip, port): port for port in range(start_port, end_port + 1)}
     
     ip = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} Ip -> {reset}")
-    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} Scanning..")
+    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('Scan')}")
     start_port = 1
     end_port = 65535
 

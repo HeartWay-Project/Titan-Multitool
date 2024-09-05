@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
     import time
@@ -13,7 +20,7 @@ try:
     print()
     token = Choice1TokenDiscord()
     try:
-        statue_number = int(input(f"{color.RED}{INPUT} How many statues do you want to cycle (max 4) -> {color.RESET}"))
+        statue_number = int(input(f"{color.BLUE}{INPUT} {tr('StatusCycle')} -> {color.RESET}"))
     except:
         ErrorNumber()
 
@@ -33,11 +40,11 @@ try:
             CustomStatus = {"custom_status": {"text": statues[i]}}
             try:
                 r = requests.patch("https://discord.com/api/v9/users/@me/settings", headers=headers, json=CustomStatus)
-                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ADD} Status: {color.WHITE}Changed{color.RED} | Status Discord: {color.WHITE}{statues[i]}{color.RED}")
+                print(f"{primary}[{secondary}{current_time_hour()}{primary}] {ADD} Status: {color.WHITE}{tr('Changed')}{color.BLUE} | Status Discord: {color.WHITE}{statues[i]}{color.BLUE}")
                 i += 1
                 time.sleep(5)
             except Exception as e:
-                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status: {color.WHITE}Changed{color.RED} | Status Discord: {color.WHITE}{statues[i]}{color.RED}")
+                print(f"{primary}[{secondary}{current_time_hour()}{primary}] {ERROR} Status: {color.WHITE}{tr('Changed')}{color.BLUE} | Status Discord: {color.WHITE}{statues[i]}{color.BLUE}")
                 time.sleep(5)
 except Exception as e:
     Error(e)

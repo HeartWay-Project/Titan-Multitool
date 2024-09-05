@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
     import subprocess
@@ -26,7 +33,7 @@ try:
         except:
             ping = "Fail"
 
-        print(f"    {INFO_ADD} Ping       : {secondary}{ping}{invalid}")
+        print(f"    {INFO_ADD} Ping         : {secondary}{ping}{invalid}")
 
     open_ports = []
 
@@ -46,14 +53,14 @@ try:
             results = {executor.submit(scan_port, ip, port): port for port in range(1, 1000 + 1)}
         concurrent.futures.wait(results)
 
-        print(f"    {INFO_ADD} Open Port  : {secondary}{open_ports}{invalid}")
+        print(f"    {INFO_ADD} {tr('Open_Ports')}  : {secondary}{open_ports}{primary}")
 
     def dns_ip(ip):
         try:
             dns, aliaslist, ipaddrlist = socket.gethostbyaddr(ip)
         except:
             dns = "None"
-        print(f"    {INFO_ADD} DNS        : {secondary}{dns}{invalid}")
+        print(f"    {INFO_ADD} DNS          : {secondary}{dns}{primary}")
 
 
     def info_ip(ip):
@@ -115,24 +122,24 @@ try:
             except: as_host = "None"
             loc_url = f"https://www.google.com/maps/search/?api=1&query={latitude},{longitude}"
 
-        Slow(f"""    {INFO_ADD} Status     : {secondary}{status}{invalid}
-    {INFO_ADD} Country    : {secondary}{country} ({country_code}){invalid}
-    {INFO_ADD} Region     : {secondary}{region} ({region_code}){invalid}
-    {INFO_ADD} Zip        : {secondary}{zip}{invalid}
-    {INFO_ADD} City       : {secondary}{city}{invalid}
-    {INFO_ADD} Latitude   : {secondary}{latitude}{invalid}
-    {INFO_ADD} Longitude  : {secondary}{longitude}{invalid}
-    {INFO_ADD} Timezone   : {secondary}{timezone}{invalid}
-    {INFO_ADD} Isp        : {secondary}{isp}{invalid}
-    {INFO_ADD} Org        : {secondary}{org}{invalid}
-    {INFO_ADD} As         : {secondary}{as_host}{invalid}{reset}""")
+        Slow(f"""    {INFO_ADD} Status       : {secondary}{status}{invalid}
+    {INFO_ADD} {tr('Country')}    : {secondary}{country} ({country_code}){invalid}
+    {INFO_ADD} Region       : {secondary}{region} ({region_code}){invalid}
+    {INFO_ADD} Zip          : {secondary}{zip}{invalid}
+    {INFO_ADD} {tr('City')}       : {secondary}{city}{invalid}
+    {INFO_ADD} Latitude     : {secondary}{latitude}{invalid}
+    {INFO_ADD} Longitude    : {secondary}{longitude}{invalid}
+    {INFO_ADD} Timezone     : {secondary}{timezone}{invalid}
+    {INFO_ADD} Isp          : {secondary}{isp}{invalid}
+    {INFO_ADD} Org          : {secondary}{org}{invalid}
+    {INFO_ADD} As           : {secondary}{as_host}{invalid}{reset}""")
         return loc_url
         
 
     Slow(map_banner)
     ip = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Ip -> {reset}")
-    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} Information Recovery..{reset}")
-    print(f"\n    {INFO_ADD} Ip         : {secondary}{ip}{invalid}")
+    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('tool_infos_recovery')}{reset}")
+    print(f"\n    {INFO_ADD} Ip           : {secondary}{ip}{invalid}")
     ping_ip(ip)
     dns_ip(ip)
     loc_url = info_ip(ip)

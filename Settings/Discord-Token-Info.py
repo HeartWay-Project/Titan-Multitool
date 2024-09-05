@@ -11,7 +11,7 @@ Title("Discord Token Info")
 try:
     print()
     token_discord = Choice1TokenDiscord()
-    print(f"{color.RED}{WAIT} Information Recovery..{reset}")
+    print(f"{primary}{WAIT} Information Recovery..{reset}")
     try:
         user = requests.get('https://discord.com/api/v8/users/@me', headers={'Authorization': token_discord}).json()
 
@@ -237,35 +237,35 @@ try:
         print(f"{ERROR} Error when retrieving information: {secondary}{e}")
 
     print(f"""
-    {secondary}[{invalid}+{secondary}]{invalid} Status       : {color.WHITE}{status}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Token        : {color.WHITE}{token_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Username     : {color.WHITE}{username_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Display Name : {color.WHITE}{display_name_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Id           : {color.WHITE}{user_id_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Created      : {color.WHITE}{created_at_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Country      : {color.WHITE}{country_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Email        : {color.WHITE}{email_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Verified     : {color.WHITE}{email_verified_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Phone        : {color.WHITE}{phone_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Nitro        : {color.WHITE}{nitro_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Linked Users : {color.WHITE}{linked_users_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Avatar Decor : {color.WHITE}{avatar_decoration_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Avatar       : {color.WHITE}{avatar_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Avatar URL   : {color.WHITE}{avatar_url_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Accent Color : {color.WHITE}{accent_color_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Banner       : {color.WHITE}{banner_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Banner Color : {color.WHITE}{banner_color_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Flags        : {color.WHITE}{flags_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Public Flags : {color.WHITE}{public_flags_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} NSFW         : {color.WHITE}{nsfw_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Multi-Factor Authentication : {color.WHITE}{mfa_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Authenticator Type          : {color.WHITE}{authenticator_types_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Billing      : {color.WHITE}{payment_methods_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Gift Code    : {color.WHITE}{gift_codes_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Guilds       : {color.WHITE}{guild_count}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Owner Guilds : {color.WHITE}{owner_guild_count}{owner_guilds_names}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Bio          : {color.WHITE}{bio_discord}{color.RED}
-    {secondary}[{invalid}+{secondary}]{invalid} Friend       : {color.WHITE}{friends_discord}{color.RED}
+    {secondary}[{primary}+{secondary}]{primary} Status       : {secondary}{status}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Token        : {secondary}{token_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Username     : {secondary}{username_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Display Name : {secondary}{display_name_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Id           : {secondary}{user_id_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Created      : {secondary}{created_at_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Country      : {secondary}{country_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Email        : {secondary}{email_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Verified     : {secondary}{email_verified_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Phone        : {secondary}{phone_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Nitro        : {secondary}{nitro_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Linked Users : {secondary}{linked_users_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Avatar Decor : {secondary}{avatar_decoration_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Avatar       : {secondary}{avatar_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Avatar URL   : {secondary}{avatar_url_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Accent Color : {secondary}{accent_color_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Banner       : {secondary}{banner_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Banner Color : {secondary}{banner_color_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Flags        : {secondary}{flags_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Public Flags : {secondary}{public_flags_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} NSFW         : {secondary}{nsfw_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Multi-Factor Authentication : {secondary}{mfa_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Authenticator Type          : {secondary}{authenticator_types_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Billing      : {secondary}{payment_methods_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Gift Code    : {secondary}{gift_codes_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Guilds       : {secondary}{guild_count}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Owner Guilds : {secondary}{owner_guild_count}{owner_guilds_names}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Bio          : {secondary}{bio_discord}{primary}
+    {secondary}[{primary}+{secondary}]{primary} Friend       : {secondary}{friends_discord}{primary}
     """)
     Continue()
     Reset()

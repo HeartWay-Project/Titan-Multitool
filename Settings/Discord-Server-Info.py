@@ -1,5 +1,11 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 BEFORED = f'{secondary}[{primary}'
 AFTERED = f'{secondary}]'
@@ -122,7 +128,7 @@ try:
     Invitation Information:
     {ADDED}{primary} Invitation        : {secondary}{invite}{primary}
     {ADDED}{primary} Code              : {secondary}{code_value}{primary}
-    {ADDED}{primary} Expired           : {secondary}{expires_at}{primary}
+    {ADDED}{primary} {tr('Expired')}           : {secondary}{expires_at}{primary}
     {ADDED}{primary} Server ID         : {secondary}{server_id}{primary}
     {ADDED}{primary} Server Name       : {secondary}{server_name}{primary}
     {ADDED}{primary} Channel ID        : {secondary}{channel_id}{primary}
@@ -137,7 +143,7 @@ try:
 
     Inviter Information:
     {ADDED}{primary} ID            : {secondary}{inviter_id}{primary}
-    {ADDED}{primary} Username      : {secondary}{inviter_username}{primary}
+    {ADDED}{primary} {tr('Username')}      : {secondary}{inviter_username}{primary}
     {ADDED}{primary} Global Name   : {secondary}{inviter_global_name}{primary}
     {ADDED}{primary} Avatar        : {secondary}{inviter_avatar}{primary}
     {ADDED}{primary} Discriminator : {secondary}{inviter_discriminator}{primary}
@@ -145,7 +151,7 @@ try:
     {ADDED}{primary} Flags         : {secondary}{inviter_flags}{primary}
     {ADDED}{primary} Banner        : {secondary}{inviter_banner}{primary}
     {ADDED}{primary} Accent Color  : {secondary}{inviter_accent_color}{primary}
-    {ADDED}{primary} Banner Color  : {secondary}{inviter_banner_color}{primary}
+    {ADDED}{primary} {tr('BannerColor')}  : {secondary}{inviter_banner_color}{primary}
     """)
     Continue()
     Reset()

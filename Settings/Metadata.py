@@ -1,16 +1,22 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
 from pymediainfo import MediaInfo
 import subprocess
 import os
 
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 def view_metadata(file_path: str):
     if not os.path.exists(file_path):
-        print(f"{ERROR} Le fichier n'existe pas.")
+        print(f"{ERROR} {tr('File')} {tr('NotExist')}")
         Error(e)
     
     media_info = MediaInfo.parse(file_path)
-    print(f"\n {INFO} Métadonnées pour {reset}{file_path}:\n")
+    print(f"\n {INFO} {tr('Metadatafor')} {reset}{file_path}:\n")
 
     for track in media_info.tracks:
         if track.track_type == "General":
@@ -36,32 +42,32 @@ def view_metadata(file_path: str):
 
 def modify_metadata(file_path: str, tag: str, value: str):
     if not os.path.exists(file_path):
-        print(f"{ERROR} Le fichier n'existe pas.")
+        print(f"{ERROR} {tr('NotExist')}")
         Error(e)
     
     try:
         command = f'exiftool -{tag}="{value}" "{file_path}"'
         subprocess.run(command, shell=True, check=True)
-        print(f"\n{INFO} Métadonnée {tag} mise à jour avec succès à {value}.")
+        print(f"\n{INFO} {tr('Metadata')} {tag} {tr('SuccesUpdate')} {value}.")
     
     except subprocess.CalledProcessError as e:
-        print(f"\n {ERROR} Erreur lors de la mise à jour des métadonnées : {e}")
+        print(f"\n {ERROR} {tr('ErrorMetadata')} {e}")
 
 def main():
     while True:
-        print(f"\n{secondary}[{primary}1{secondary}] {primary}Voir les métadonnées d'un fichier")
-        print(f"{secondary}[{primary}2{secondary}] {primary}Modifier les métadonnées d'un fichier")
+        print(f"\n{secondary}[{primary}1{secondary}] {primary}{tr('ViewMetadata')}")
+        print(f"{secondary}[{primary}2{secondary}] {primary}{tr('EditMetadata')}")
         print(f"{secondary}[{primary}3{secondary}] {primary}Quitter")
-        choix = input(f"\n{INPUT} Choose an option -> {reset}")
+        choix = input(f"\n{INPUT} {tr('Chose')} -> {reset}")
 
         if choix == '1':
-            file_path = input(f"\n{INPUT} Chemin du fichier -> {reset}")
+            file_path = input(f"\n{INPUT} {tr('FilePath')} -> {reset}")
             view_metadata(file_path)
 
         elif choix == '2':
-            file_path = input(f"{INPUT} Chemin du fichier -> {reset}")
-            tag = input(f"{INPUT} Nom du champ à modifier -> {reset}")
-            value = input(f"{INPUT} Nouvelle valeur pour {tag} -> {reset}")
+            file_path = input(f"{INPUT} {tr('FilePath')} -> {reset}")
+            tag = input(f"{INPUT} {tr('FiealdModify')} -> {reset}")
+            value = input(f"{INPUT} {tr('NewValue')} {tag} -> {reset}")
             modify_metadata(file_path, tag, value)
 
         elif choix == '3':

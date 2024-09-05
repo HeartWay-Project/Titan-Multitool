@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import phonenumbers
     from phonenumbers import geocoder, carrier, timezone
@@ -10,8 +17,8 @@ except Exception as e:
 Title("Number Info (Lookup)")
 
 try:
-    phone_number = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} Phone Number -> {color.RESET}")
-    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} Information Recovery..{reset}")
+    phone_number = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('PhoneNumber')} -> {color.RESET}")
+    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('tool_infos_recovery')}{reset}")
     try:
         parsed_number = phonenumbers.parse(phone_number, None)
         if phonenumbers.is_valid_number(parsed_number):
@@ -39,20 +46,20 @@ try:
 
 
         print(f"""
-    {INFO_ADD} Phone        : {secondary}{phone_number}{invalid}
-    {INFO_ADD} Formatted    : {secondary}{formatted_number}{invalid}
-    {INFO_ADD} Status       : {secondary}{status}{invalid}
-    {INFO_ADD} Country Code : {secondary}{country_code}{invalid}
-    {INFO_ADD} Country      : {secondary}{country}{invalid}
-    {INFO_ADD} Region       : {secondary}{region}{invalid}
-    {INFO_ADD} Timezone     : {secondary}{timezone_info}{invalid}
-    {INFO_ADD} Operator     : {secondary}{operator}{invalid}
-    {INFO_ADD} Type Number  : {secondary}{type_number}{invalid}
+    {INFO_ADD} {tr('Phone')}        : {secondary}{phone_number}{primary}
+    {INFO_ADD} {tr('Formatted')}    : {secondary}{formatted_number}{primary}
+    {INFO_ADD} Status       : {secondary}{status}{primary}
+    {INFO_ADD} Country Code : {secondary}{country_code}{primary}
+    {INFO_ADD} {tr('Country')}      : {secondary}{country}{primary}
+    {INFO_ADD} Region       : {secondary}{region}{primary}
+    {INFO_ADD} Timezone     : {secondary}{timezone_info}{primary}
+    {INFO_ADD} {tr('Operator')}     : {secondary}{operator}{primary}
+    {INFO_ADD} Type Number  : {secondary}{type_number}{primary}
     """)
         Continue()
         Reset()
     except:
-        print(f"{BEFORE + current_time_hour() + AFTER} {INFO} Invalid Format ! [Ex: {secondary}+442012345678{invalid} or {secondary}+33623456789{invalid}]")
+        print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {tr('InvalidFormat')} ! [Ex: {secondary}+442012345678{primary} or {secondary}+33123456789{primary}]")
         Continue()
         Reset()
 except Exception as e:

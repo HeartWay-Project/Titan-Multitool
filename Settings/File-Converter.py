@@ -1,11 +1,17 @@
 import os
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
 from PIL import Image
 from moviepy.editor import VideoFileClip
 from pydub import AudioSegment
 from pdf2docx import Converter
 from docx import Document
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 OUTPUT_DIR = "1-Output/Converter"
 
@@ -76,7 +82,7 @@ def convert_file(input_file, output_format):
     elif ext == 'docx' and output_format.lower() == 'pdf':
         return convert_docx_to_pdf(input_file)
     else:
-        raise ValueError("Conversion non prise en charge pour ce type de fichier.")
+        raise ValueError(f"{tr('ConvertionNotSupport')}")
 
 def get_conversion_options(ext):
     options = {
@@ -103,30 +109,28 @@ def get_conversion_options(ext):
 if __name__ == "__main__":
     ensure_output_dir()
     
-    input_file = input(f"\n{INPUT} Enter the path of the file to convert -> {reset}")
+    input_file = input(f"\n{INPUT} {tr('FilePath')} -> {reset}")
     ext = input_file.split('.')[-1].lower()
     
     available_options = get_conversion_options(ext)
     
     if not available_options:
-        print(f"\n{ERROR} No conversion option available for file with extension .{ext}")
+        print(f"\n{ERROR} {tr('ConvertionNotSupport')} .{ext}")
     else:
-        print(f"\n{INFO} Conversion options available:")
+        print(f"\n{INFO} {tr('ConvertOptions')}")
         for i, option in enumerate(available_options, 1):
             print(f"{secondary}[{primary}{i}{secondary}] {primary}{option}")
         
-        choice = int(input(f"\n{INPUT} Enter the conversion option number -> {reset}"))
+        choice = int(input(f"\n{INPUT} {tr('Choice')} -> {reset}"))
         
         if 1 <= choice <= len(available_options):
             output_format = available_options[choice - 1]
             try:
                 output_file = convert_file(input_file, output_format)
-                print(f"\n{INFO} File converted successfully: {reset}{output_file}")
+                print(f"\n{INFO} {tr('FileConvertedSucces')} {reset}{output_file}")
                 Continue()
                 Reset()
             except Exception as e:
-                print(f"Erreur: {e}")
+                Error()
         else:
-            print(f"\n{ERROR} Invalid Option.")
-            Continue()
-            Reset()
+            ErrorChoice()

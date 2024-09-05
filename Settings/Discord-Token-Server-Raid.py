@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import random
     import threading
@@ -22,7 +29,7 @@ try:
         message_sensur = message
 
     try:
-        threads_number = int(input(f"{INPUT} Threads Number (recommended: 2, 4) -> {color.RESET}"))
+        threads_number = int(input(f"{INPUT} {tr('ThreadsNumber')} (recommended: 2, 4) -> {color.RESET}"))
     except:
         ErrorNumber()
 
@@ -32,9 +39,9 @@ try:
             channel = random.choice(channels)
             response = requests.post(f"https://discord.com/api/channels/{channel}/messages", data={'content': message}, headers={'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.12) Gecko/20050915 Firefox/1.0.7', 'Authorization': token})
             response.raise_for_status()
-            print(f"{valid}[{secondary}{current_time_hour()}{valid}] {GEN_VALID} Message: {color.WHITE}{message_sensur}{color.GREEN} | Channel: {color.WHITE}{channel}{color.GREEN} | Status: {color.WHITE}Send{color.GREEN}")
+            print(f"{valid}[{secondary}{current_time_hour()}{valid}] {GEN_VALID} Message: {color.WHITE}{message_sensur}{color.GREEN} | {tr('Channel')}: {color.WHITE}{channel}{color.GREEN} | Status: {color.WHITE}Send{color.GREEN}")
         except:
-            print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {GEN_INVALID} Message: {color.WHITE}{message_sensur}{color.RED} | Channel: {color.WHITE}{channel}{color.RED} | Status: {color.WHITE}Error {response.status_code}{color.RED}")
+            print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {GEN_INVALID} Message: {color.WHITE}{message_sensur}{color.RED} | {tr('Channel')}: {color.WHITE}{channel}{color.RED} | Status: {color.WHITE}Error {response.status_code}{color.RED}")
 
     def request():
         threads = []

@@ -1,7 +1,13 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
 from PIL import Image
 import os
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 Title("Steganography")
 
@@ -34,7 +40,7 @@ def encode_message_in_image(image_path: str, message: str):
                 output_path = os.path.join(output_directory, output_filename)
 
                 encoded_image.save(output_path)
-                print(f"\n{BEFORE + current_time_hour() + AFTER}{INFO}{primary}Message encodé avec succès dans {reset}{output_path}")
+                print(f"\n{BEFORE + current_time_hour() + AFTER}{INFO}{primary}{tr('MessageEncode')} {reset}{output_path}")
                 Continue()
                 Reset()
 
@@ -56,30 +62,30 @@ def decode_message_from_image(image_path: str) -> str:
 
 def main():
     while True:
-        print(f"\n{secondary}[{primary}1{secondary}] {primary}Encoder un message dans une image")
-        print(f"{secondary}[{primary}2{secondary}] {primary}Décoder un message d'une image")
+        print(f"\n{secondary}[{primary}1{secondary}] {primary}{tr('EncodeMessage')}")
+        print(f"{secondary}[{primary}2{secondary}] {primary}{tr('DecodeMessage')}")
         print(f"{secondary}[{primary}3{secondary}] {primary}Quitter")
-        choix = input(f"\n{INPUT} {primary}Choose an option -> {reset}")
+        choix = input(f"\n{INPUT} {primary}{tr('Chose')} -> {reset}")
 
         if choix == '1':
-            image_path = input(f"\n{INPUT} {primary}Chemin de l'image source -> {reset}")
+            image_path = input(f"\n{INPUT} {primary}{tr('PathImage')} -> {reset}")
             if not os.path.exists(image_path):
-                print("Le fichier image n'existe pas. Veuillez réessayer.")
+                print(f"{tr('ImageNotExist')}")
                 Continue()
                 Reset()
             
-            message = input(f"\n{INPUT} {primary}Entrez le message à encoder -> {reset}")
+            message = input(f"\n{INPUT} {primary}{tr('MessageToEncode')} -> {reset}")
             encode_message_in_image(image_path, message)
 
         elif choix == '2':
-            image_path = input(f"\n{INPUT} {primary}Chemin de l'image encodée -> {reset}")
+            image_path = input(f"\n{INPUT} {primary}{tr('PathEncodedImage')} -> {reset}")
             if not os.path.exists(image_path):
-                print("Le fichier image n'existe pas. Veuillez réessayer.")
+                print(f"{tr('ImageNotExist')}")
                 Continue()
                 Reset()
             
             message = decode_message_from_image(image_path)
-            print(f"\n{BEFORE + current_time_hour() + AFTER} {INFO} {primary}Message décodé : {reset}{message}\n")
+            print(f"\n{BEFORE + current_time_hour() + AFTER} {INFO} {primary}{tr('DecodedMessage')} : {reset}{message}\n")
             Continue()
             Reset()
 

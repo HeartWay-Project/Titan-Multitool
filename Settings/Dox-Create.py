@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import random
 except Exception as e:
@@ -164,42 +171,42 @@ try:
         return username_discord, display_name_discord, user_id_discord, avatar_url_discord, created_at_discord, email_discord, phone_discord, nitro_discord, friends_discord, gift_codes_discord, mfa_discord
 
 
-    by =      input(f"\n{INPUT} Doxed By      : {reset}")
-    reason =  input(f"{INPUT} Reason        : {reset}")
-    pseudo1 = input(f"{INPUT} First Pseudo  : {reset}")
+    by =      input(f"\n{INPUT} {tr('DoxBy')}      : {reset}")
+    reason =  input(f"{INPUT} {tr('Reason')}        : {reset}")
+    pseudo1 = input(f"{INPUT} {tr('1Pseudo')}  : {reset}")
     pseudo2 = input(f"{INPUT} Second Pseudo : {reset}")
 
-    print(f"\n{INFO}{yellow} Discord Information:")
-    token_input = input(f"{INPUT} Token ? (y/n) -> {reset}")
-    if token_input in ["y", "Y", "yes", "YES", "Yes"]:
+    print(f"\n{INFO}{yellow} {tr('DiscInfo')}")
+    token_input = input(f"{INPUT} {tr('TokenYN')} -> {reset}")
+    if token_input in ["y", "Y", "yes", "YES", "Yes", "o", "O", "oui", "OUI", "Oui"]:
         token = input(f"{INPUT} Token: {reset}")
         username_discord, display_name_discord, user_id_discord, avatar_url_discord, created_at_discord, email_discord, phone_discord, nitro_discord, friends_discord, gift_codes_discord, mfa_discord = TokenInfo(token)
     else:
         token = "None"
-        username_discord =     input(f"{INPUT} Username      : {reset}")
-        display_name_discord = input(f"{INPUT} Display Name  : {reset}")
+        username_discord =     input(f"{INPUT} {tr('Username')}      : {reset}")
+        display_name_discord = input(f"{INPUT} {tr('DisplayName')}  : {reset}")
         user_id_discord =      input(f"{INPUT} Id            : {reset}")
         avatar_url_discord =   input(f"{INPUT} Avatar        : {reset}")
-        created_at_discord =   input(f"{INPUT} Created At    : {reset}")
+        created_at_discord =   input(f"{INPUT} {tr('Created')}    : {reset}")
         email_discord =        input(f"{INPUT} Email         : {reset}")
-        phone_discord =        input(f"{INPUT} Phone         : {reset}")
+        phone_discord =        input(f"{INPUT} {tr('Phone')}         : {reset}")
         nitro_discord =        input(f"{INPUT} Nitro         : {reset}")
-        friends_discord =      input(f"{INPUT} Friends       : {reset}")
-        gift_codes_discord =   input(f"{INPUT} Gift Code     : {reset}")
+        friends_discord =      input(f"{INPUT} {tr('Friends')}       : {reset}")
+        gift_codes_discord =   input(f"{INPUT} {tr('GiftDisc')}     : {reset}")
         mfa_discord =          input(f"{INPUT} Mfa           : {reset}")
 
     print(f"\n{INFO}{yellow} Ip Information:")
-    ip_public = input(f"{INPUT} Ip Publique   : {reset}")
-    ip_local =  input(f"{INPUT} Ip Local      : {reset}")
+    ip_public = input(f"{INPUT} {tr('IpPublic')}   : {reset}")
+    ip_local =  input(f"{INPUT} {tr('Iplocal')}      : {reset}")
     ipv6 =      input(f"{INPUT} Ipv6          : {reset}")
     vpn_pc =    input(f"{INPUT} VPN           : {reset}")
     isp_ip, org_ip, as_ip = IpInfo(ip_public)
 
     print(f"\n{INFO}{yellow} Pc Information:")
-    name_pc =         input(f"{INPUT} Name          : {reset}")
-    username_pcc =    input(f"{INPUT} Username      : {reset}")
-    displayname_pc =  input(f"{INPUT} Display Name  : {reset}")
-    platform_pc =     input(f"{INPUT} Platefrom     : {reset}")
+    name_pc =         input(f"{INPUT} {tr('PCHostname')}          : {reset}")
+    username_pcc =    input(f"{INPUT} {tr('PCUsername')}      : {reset}")
+    displayname_pc =  input(f"{INPUT} {tr('PCDisplayName')}  : {reset}")
+    platform_pc =     input(f"{INPUT} {tr('Platform')}     : {reset}")
     exploitation_pc = input(f"{INPUT} Exploitation  : {reset}")
     windowskey_pc =   input(f"{INPUT} Windows Key   : {reset}")
     mac_pc =          input(f"{INPUT} MAC Adress    : {reset}")
@@ -228,10 +235,10 @@ try:
                 
     print(f"\n{INFO}{yellow} Loc Information:")
     continent =   input(f"{INPUT} Continent     : {reset}")
-    country =     input(f"{INPUT} Country       : {reset}")
+    country =     input(f"{INPUT} {tr('Country')}       : {reset}")
     region =      input(f"{INPUT} Region        : {reset}")
     postal_code = input(f"{INPUT} Postal Code   : {reset}")
-    city =        input(f"{INPUT} City          : {reset}")
+    city =        input(f"{INPUT} {tr('City')}          : {reset}")
     adress =      input(f"{INPUT} Adress        : {reset}")
     timezone =    input(f"{INPUT} Timezone      : {reset}")
     longitude =   input(f"{INPUT} Longitude     : {reset}")

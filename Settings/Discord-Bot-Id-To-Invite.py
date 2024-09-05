@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import webbrowser
 except Exception as e:
@@ -19,19 +26,14 @@ def main():
             URLBot = f'https://discord.com/oauth2/authorize?client_id={IdBot}&scope=bot&permissions=8'
             print(f"\n{INFO} URL bot: \"{secondary}{URLBot}{primary}\"{reset}")
 
-            choice = input(f"\n{INPUT} Open the Internet? (y/n) -> {reset}")
+            choice = input(f"\n{INPUT} {tr('OpenBrowser')} -> {reset}")
             if choice.lower() in ['y', 'yes']:
                 webbrowser.open_new_tab(URLBot)
-                Slow(f"\n{valid}Opening the URL in your browser...{reset}")
+                Slow(f"\n{valid}{tr('OpenURL')}{reset}")
             else:
-                Slow(f"\n{color.YELLOW}URL not opened.{color.RESET}")
+                Continue()
+                Reset()
 
-            next_action = input(f"\n{INPUT} Would you like to enter another ID? (y/n) -> {reset}")
-            if next_action.lower() not in ['y', 'yes']:
-                Slow(f"{primary}Quitting...{reset}")
-                break
-
-            Reset()
         except Exception as e:
             Error(e)
             continue

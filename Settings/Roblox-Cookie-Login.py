@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     from selenium import webdriver
 except Exception as e:
@@ -16,16 +23,16 @@ try:
 {secondary}[{invalid}02{secondary}] {invalid}->{secondary} Edge (Windows)
 {secondary}[{invalid}03{secondary}] {invalid}->{secondary} Firefox (Windows)
     """)
-    browser = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Browser -> {reset}")
+    browser = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('Choice')} -> {reset}")
  
     if browser in ['1', '01']:
         try:
             navigator = "Chrome"
-            print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {navigator} Starting..{primary}")
+            print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {navigator} {tr('starting')}{primary}")
             driver = webdriver.Chrome()
-            print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {navigator} Ready !{primary}")
+            print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {navigator} {tr('ready')}{primary}")
         except:
-            print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {navigator} not installed or driver not up to date.")
+            print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {navigator} {tr('error_driver')}")
             Continue()
             Reset()
 
@@ -35,11 +42,11 @@ try:
         else:
             try:
                 navigator = "Edge"
-                print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {navigator} Starting..{primary}")
+                print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {navigator} {tr('starting')}{primary}")
                 driver = webdriver.Edge()
-                print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {navigator} Ready !{primary}")
+                print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {navigator} {tr('ready')}{primary}")
             except:
-                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {navigator} not installed or driver not up to date.")
+                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {navigator} {tr('error_driver')}")
                 Continue()
                 Reset()
 
@@ -49,11 +56,11 @@ try:
         else:
             try:
                 navigator = "Firefox"
-                print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {navigator} Starting..{primary}")
+                print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {navigator} {tr('starting')}{primary}")
                 driver = webdriver.Firefox()
-                print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {navigator} Ready !{primary}")
+                print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {navigator} {tr('ready')}{primary}")
             except:
-                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {navigator} not installed or driver not up to date.")
+                print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {navigator} {tr('error_driver')}")
                 Continue()
                 Reset()
     else:
@@ -69,11 +76,11 @@ try:
         print(f"{BEFORE + current_time_hour() + AFTER} {INFO} Connected !{primary}")
         time.sleep(1)
         driver.get("https://www.roblox.com/users/profile")
-        print(f"{BEFORE + current_time_hour() + AFTER} {INFO} If you leave the tool, {navigator} will close!{primary}")
+        print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {tr('leave_tool_warning')}{primary}")
         Continue()
         Reset()
     except:
-        print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {navigator} not installed or driver not up to date.")
+        print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {navigator} {tr('error_driver')}")
         Continue()
         Reset()
 except Exception as e:

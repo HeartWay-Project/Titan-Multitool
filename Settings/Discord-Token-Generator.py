@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import string
     import requests
@@ -12,13 +19,13 @@ except Exception as e:
 Title("Discord Token Generator")
 
 try:
-    webhook = input(f"{color.BLUE}\n{INPUT} Webhook ? (y/n) -> {color.RESET}")
-    if webhook in ['y', 'Y', 'Yes', 'yes', 'YES']:
-        webhook_url = input(f"{color.BLUE}{INPUT} Webhook URL -> {color.RESET}")
+    webhook = input(f"{color.BLUE}\n{INPUT} {tr('WebhookYN')} -> {color.RESET}")
+    if webhook in ['y', 'Y', 'Yes', 'yes', 'YES', 'o', 'O', 'Oui', 'oui', 'OUI']:
+        webhook_url = input(f"{color.BLUE}{INPUT} {tr('URLWebhook')} -> {color.RESET}")
         CheckWebhook(webhook_url)
 
     try:
-        threads_number = int(input(f"{INPUT} Threads Number -> {color.RESET}"))
+        threads_number = int(input(f"{INPUT} {tr('ThreadsNumber')} -> {color.RESET}"))
     except:
         ErrorNumber()
 
@@ -56,13 +63,13 @@ try:
                     }
                     }
                     send_webhook(embed_content)
-                    print(f"{valid}[{secondary}{current_time_hour()}{valid}] {GEN_VALID} Status:  {color.WHITE}Valid{color.GREEN}  | Token: {color.WHITE}{token}{color.GREEN}")
+                    print(f"{valid}[{secondary}{current_time_hour()}{valid}] {GEN_VALID} Status:  {color.WHITE}Valid{color.GREEN}  | Token: {secondary}{token}{color.GREEN}")
                 else:
-                    print(f"{valid}[{secondary}{current_time_hour()}{valid}] {GEN_VALID} Status:  {color.WHITE}Valid{color.GREEN}  | Token: {color.WHITE}{token}{color.GREEN}")
+                    print(f"{valid}[{secondary}{current_time_hour()}{valid}] {GEN_VALID} Status:  {color.WHITE}Valid{color.GREEN}  | Token: {secondary}{token}{color.GREEN}")
             except:
-                print(f"{invalid}[{secondary}{current_time_hour()}{primary}] {GEN_INVALID} Status: {color.WHITE}Invalid{color.RED} | Token: {color.WHITE}{token}{color.BLUE}")
+                print(f"{invalid}[{secondary}{current_time_hour()}{primary}] {GEN_INVALID} Status: {color.WHITE}Invalid{primary} | Token: {secondary}{token}{color.BLUE}")
         except:
-            print(f"{invalid}[{secondary}{current_time_hour()}{primary}] {GEN_INVALID} Status: {color.WHITE}Error{color.RED} | Token: {color.WHITE}{token}{color.BLUE}")
+            print(f"{invalid}[{secondary}{current_time_hour()}{primary}] {GEN_INVALID} Status: {color.WHITE}{tr('Error')}{primary} | Token: {secondary}{token}{color.BLUE}")
 
     def request():
         threads = []

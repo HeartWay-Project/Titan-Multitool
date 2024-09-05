@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
     import time
@@ -18,7 +25,7 @@ try:
     r = requests.get('https://discord.com/api/v8/users/@me', headers=headers)
     if r.status_code == 200:
         try:
-            amount = int(input(f"{color.RED}{INPUT} Enter the number of cycles -> {color.RESET}"))
+            amount = int(input(f"{primary}{INPUT} {tr('CycleNumber')} -> {color.RESET}"))
         except:
             ErrorNumber()
                 
@@ -26,14 +33,14 @@ try:
         for i in range(amount):
             try:
                 theme = next(modes)
-                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ADD} Status: {color.WHITE}Changed{color.RED} | Theme: {color.WHITE}{theme}{color.RED}")
+                print(f"{primary}[{secondary}{current_time_hour()}{primary}] {ADD} Status: {color.WHITE}{tr('Changed')}{primary} | Theme: {color.WHITE}{theme}{primary}")
                 time.sleep(0.5)
                 setting = {'theme': theme}
                 requests.patch("https://discord.com/api/v8/users/@me/settings", headers=headers, json=setting)
             except:
-                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {ERROR} Status:  {color.WHITE}Error{color.RED}  | Theme: {color.WHITE}{theme}{color.RED}")
+                print(f"{primary}[{secondary}{current_time_hour()}{primary}] {ERROR} Status:  {color.WHITE}{tr('Changed')}{primary}  | Theme: {color.WHITE}{theme}{primary}")
 
-        print(f"{color.RED}{INFO} Finish.")
+        print(f"{primary}{INFO} Finish.")
         Continue()
         Reset()
     else:

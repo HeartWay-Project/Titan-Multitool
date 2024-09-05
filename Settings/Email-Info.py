@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
    import dns.resolver
    import requests
@@ -111,16 +118,16 @@ try:
         mailgun_validation = None
 
     print(f"""
-    {INFO_ADD} Email      : {secondary}{email}{invalid}
-    {INFO_ADD} Name       : {secondary}{name}{invalid}
-    {INFO_ADD} Domain     : {secondary}{domain}{invalid}
-    {INFO_ADD} Tld        : {secondary}{tld}{invalid}
-    {INFO_ADD} Domain All : {secondary}{domain_all}{invalid}
-    {INFO_ADD} Servers    : {secondary}{mx_servers}{invalid}
-    {INFO_ADD} Spf        : {secondary}{spf_records}{invalid}
-    {INFO_ADD} Dmarc      : {secondary}{dmarc_records}{invalid}
-    {INFO_ADD} Workspace  : {secondary}{google_workspace}{invalid}
-    {INFO_ADD} Mailgun    : {secondary}{mailgun_validation}{invalid}
+    {INFO_ADD} Email      : {secondary}{email}{primary}
+    {INFO_ADD} Name       : {secondary}{name}{primary}
+    {INFO_ADD} {tr('Domain')}     : {secondary}{domain}{primary}
+    {INFO_ADD} Tld        : {secondary}{tld}{primary}
+    {INFO_ADD} Domain All : {secondary}{domain_all}{primary}
+    {INFO_ADD} Servers    : {secondary}{mx_servers}{primary}
+    {INFO_ADD} Spf        : {secondary}{spf_records}{primary}
+    {INFO_ADD} Dmarc      : {secondary}{dmarc_records}{primary}
+    {INFO_ADD} Workspace  : {secondary}{google_workspace}{primary}
+    {INFO_ADD} Mailgun    : {secondary}{mailgun_validation}{primary}
     {color.RESET}""")
 
     Continue()

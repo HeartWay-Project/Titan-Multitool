@@ -13,7 +13,6 @@ except:
 def read_information_from_file(file_path):
     try:
         with open(file_path, 'r') as file:
-            # Lire les informations depuis le fichier et les stocker dans un set
             return {line.strip() for line in file}
     except FileNotFoundError:
         print(f"Error : File '{file_path}' not found.")
@@ -46,10 +45,6 @@ def generate_lower(passwords):
             passwords_low_set.add(passwd_lower)
     return passwords_low_set
 
-
-############################################################################################################################################################
-
-# Fonction pour générer toutes les combinaisons de lettre majuscule
 def generate_all_maj(passwd, remaining_replacements, global_passwords):
     all_maj_set = set()
     queue = [(passwd, 0, remaining_replacements)]
@@ -74,18 +69,15 @@ def start_all_upper(passwords,nb_all_maj,func_low):
             low_for_all_maj = passwords.union(generate_lower(passwords))
         else:
             low_for_all_maj = passwords
-        # Modifier les mots de passe en remplaçant des lettres par la même en majuscule
+
         all_maj_sets = []
         for passwd in tqdm(low_for_all_maj, desc=Fore.LIGHTGREEN_EX + "[>] Generation with capital letters", bar_format="{desc}: "+Fore.LIGHTWHITE_EX+"{percentage:.2f}%"):
-            all_maj_set = generate_all_maj(passwd, nb_all_maj, low_for_all_maj) # ex: nb_all_maj=2 : avec 2 remplacements de majuscule max
+            all_maj_set = generate_all_maj(passwd, nb_all_maj, low_for_all_maj)
             all_maj_sets.append(all_maj_set)
         all_maj = set.union(*all_maj_sets)
         passwords = passwords.union(all_maj)
     return passwords
 
-############################################################################################################################################################
-
-# Fonction pour générer toutes les combinaisons de remplacements par symboles
 def generate_symbol_digit(passwd, symbol_letter, remaining_replacements, global_passwords):
     passwd_symb = set()
     queue = [(passwd, 0, remaining_replacements)]
@@ -106,16 +98,16 @@ def generate_symbol_digit(passwd, symbol_letter, remaining_replacements, global_
     return passwd_symb
 
 def start_symbol_digit(passwords,dictionary,nb,str_gen):
-    # Modifier les mots de passe en remplaçant des lettres par leur équivalents symboliques
+
     symbols_list_sets=[]
     for passwd in tqdm(passwords, desc=Fore.LIGHTGREEN_EX + str_gen, bar_format="{desc}: "+Fore.LIGHTWHITE_EX+"{percentage:.2f}%"):
-        symbols_list = generate_symbol_digit(passwd, dictionary, nb, passwords) # ex: nb for symbols=2 : avec 2 remplacements de symboles max
+        symbols_list = generate_symbol_digit(passwd, dictionary, nb, passwords)
         symbols_list_sets.append(symbols_list)
     all_maj = set.union(*symbols_list_sets)
     passwords = passwords.union(all_maj)
     return passwords
 
-############################################################################################################################################################
+
 
 
 def add_char(passwords,lvl):
@@ -124,8 +116,7 @@ def add_char(passwords,lvl):
                 ["1", "123", "0", ".", "!", "*", "00","2000"]]
     passwords_tmp=set()
     lvl=int(lvl)
-    # Il faut ajouter plusieurs listes car ce n'est pas suffisant exemple celle-ci c'est uniquement pour le soft
-    # Modifier les mots de passe en remplaçant des lettres par leur équivalents symboliques
+
     for passwd in tqdm(passwords, desc=Fore.LIGHTGREEN_EX + "[>] Generation with characters addition", bar_format="{desc}: "+Fore.LIGHTWHITE_EX+"{percentage:.2f}%"):
         passwd_save=passwd
         for char in char_sup[lvl-1]:
@@ -135,14 +126,15 @@ def add_char(passwords,lvl):
     passwords = passwords.union(passwords_tmp)
     return passwords
 
-############################################################################################################################################################
+
 
 def generate_merge(passwords, to_merge):
     result = set()
-    # Générer toutes les permutations entre le prénom et les éléments du set
+
     for passwd in tqdm(passwords, desc=Fore.LIGHTGREEN_EX + "[>] Merger in progress", bar_format="{desc}: "+Fore.LIGHTWHITE_EX+"{percentage:.2f}%"):
+
         for word in to_merge:
-            # Ajouter les permutations au résultat
+
             result.add(passwd + word)
             result.add(word + passwd)
     return result
@@ -150,7 +142,7 @@ def generate_merge(passwords, to_merge):
 def start_merge(passwords, arg_merge):
     passwords_initial = passwords
     wl_files = arg_merge.split(",")
-    # Fusionner les mots de passe avec la digit wordlist
+    
     for file in wl_files:
         convert_file = read_information_from_file(file)
         passwords = passwords.union(generate_merge(passwords_initial, convert_file))
@@ -173,7 +165,7 @@ def start_ext_merge(ext):
     print("")
     return passwords
 
-############################################################################################################################################################
+
 
 
 def add_double_letter(passwords):
@@ -186,7 +178,7 @@ def add_double_letter(passwords):
     return passwords
 
 
-############################################################################################################################################################
+
 
 
 def save_passwords_to_file(passwords, filename):

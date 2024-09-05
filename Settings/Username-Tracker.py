@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
     from bs4 import BeautifulSoup
@@ -152,9 +159,9 @@ try:
 
     number_site = 0
     number_found = 0
-    username = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} Username -> {reset}")
+    username = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('Username')} -> {reset}")
     Censored(username)
-    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} Account search..")
+    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('AccountSearch')}")
     username_lower = username.lower()
     for site, url_template in sites.items():
         url = url_template.format(username)
@@ -169,7 +176,7 @@ try:
                     print(f"{BEFORE + current_time_hour() + AFTER} {ADD} {site}: {secondary + url}")
         except: pass
 
-    print(f"{BEFORE + current_time_hour() + AFTER} {INFO} Total Website: {secondary}{number_site}{primary}, Found: {secondary}{number_found}{primary}")
+    print(f"{BEFORE + current_time_hour() + AFTER} {INFO} Total Website: {secondary}{number_site}{primary}, {tr('Found')} {secondary}{number_found}{primary}")
     Continue()
     Reset()
 except Exception as e:

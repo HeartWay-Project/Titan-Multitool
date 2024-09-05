@@ -3,6 +3,12 @@ import sys
 import ctypes
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 def is_admin():
     try:
@@ -11,11 +17,11 @@ def is_admin():
         return False
 
 if not is_admin():
-    print(f"\n{WAIT} Launching the order as administrator...")
+    print(f"\n{WAIT} {tr('LaunchAdmin')}")
     ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, ' '.join(sys.argv), None, 1)
     sys.exit()
 
-confirmation = input(f"{INPUT} Would you like to activate winrar premium? (y/n): ").strip().lower()
+confirmation = input(f"{INPUT} {tr('WinPremium')} ").strip().lower()
 
 if confirmation == 'y':
     winrar_dir = "C:\\Program Files\\WinRAR"
@@ -37,8 +43,8 @@ c57d0b0a3fe7ac36c517b1d2be385dcc726039e5f536439a806c35
     try:
         with open(key_file_path, "w") as key_file:
             key_file.write(key_content)
-        print(f"\nWinrar activated successfully")
+        print(f"\n{tr('WinActive')}")
     except Exception as e:
-        print(f"\nError during activation {key_file_path}: {e}")
+        print(f"\n{tr('ErrorWinActive')} {key_file_path}: {e}")
 else:
-    print("\nOpération annulée.")
+    print(f"\n{tr('CancelOp')}")

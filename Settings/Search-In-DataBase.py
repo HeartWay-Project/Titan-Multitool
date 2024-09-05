@@ -1,5 +1,11 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 Title("Search DataBase")
 
@@ -8,11 +14,11 @@ try:
     folder_database = os.path.abspath(folder_database_relative)
 
     print(f"""
-{BEFORE + current_time_hour() + AFTER} {INFO} Add DataBase to the "{secondary}{folder_database_relative}{invalid}" folder.
-{BEFORE + current_time_hour() + AFTER} {INFO} If you don't have a DataBase you can get one on the Discord Server "{secondary}{discord_server}{invalid}\".""")
-    search = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} Search -> {reset}")
+{BEFORE + current_time_hour() + AFTER} {INFO} {tr('AddDB1')} "{secondary}{folder_database_relative}{primary}".
+{BEFORE + current_time_hour() + AFTER} {INFO} {tr('NoDB')} "{secondary}{discord_server}{primary}\".""")
+    search = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('Search')} -> {reset}")
 
-    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} Search in DataBase..")
+    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('DBSearch')}")
 
     def TitleSearch(files_searched, element):
         Title(f"Search DataBase | Total: {files_searched} | File: {element}")
@@ -39,10 +45,10 @@ try:
                                 if search in line:
                                     results_found = True
                                     line_info = line.strip().replace(search, f"{color.YELLOW}{search}{secondary}")
-                                    print(f"""{invalid}
-- Folder : {secondary}{folder}{invalid}
-- File   : {secondary}{element}{invalid}
-- Line   : {secondary}{line_number}{invalid}
+                                    print(f"""{primary}
+- Folder : {secondary}{folder}{primary}
+- File   : {secondary}{element}{primary}
+- Line   : {secondary}{line_number}{primary}
 - Result : {secondary}{line_info}
     """)
                     except UnicodeDecodeError:
@@ -56,26 +62,26 @@ try:
                                     if search in line:
                                         results_found = True
                                         line_info = line.strip().replace(search, f"{color.YELLOW}{search}{secondary}")
-                                        print(f"""{invalid}
-- Folder : {secondary}{folder}{invalid}
-- File   : {secondary}{element}{invalid}
-- Line   : {secondary}{line_number}{invalid}
+                                        print(f"""{primary}
+- Folder : {secondary}{folder}{primary}
+- File   : {secondary}{element}{primary}
+- Line   : {secondary}{line_number}{primary}
 - Result : {secondary}{line_info}
     """)
                         except Exception as e:
-                            print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error reading file \"{secondary}{element}{invalid}\": {secondary}{e}")
+                            print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorReadFile')} \"{secondary}{element}{primary}\": {secondary}{e}")
                     except Exception as e:
-                        print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error reading file \"{secondary}{element}{invalid}\": {secondary}{e}")
+                        print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorReadFile')} \"{secondary}{element}{primary}\": {secondary}{e}")
             return results_found
 
         results_found = check(folder_database)
         if not results_found:
-            print(f"{BEFORE + current_time_hour() + AFTER} {INFO} No result found for \"{secondary}{search}{invalid}\".")
+            print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {tr('NoResultSearch')} \"{secondary}{search}{primary}\".")
 
-        print(f"{BEFORE + current_time_hour() + AFTER} {INFO} Total files searched: {secondary}{files_searched}")
+        print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {tr('TotalSearchFile')} {secondary}{files_searched}")
 
     except Exception as e:
-        print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error during search: {secondary}{e}")
+        print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorSearch')} {secondary}{e}")
 
     Continue()
     Reset()

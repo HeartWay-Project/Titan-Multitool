@@ -5,7 +5,7 @@ try:
 except Exception as e:
    ErrorModule(e)
    
-Title("Dox Tracker (Osint)")
+Title("Dox Tracker")
 
 try:
     print(f"""

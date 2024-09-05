@@ -4,6 +4,7 @@ import re
 import asyncio
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
 from email_osg.modules.accounts.adobe import adobe
 from email_osg.modules.accounts.twitter import x
 from email_osg.modules.accounts.gravatar import gravatar
@@ -23,6 +24,11 @@ from email_osg.modules.breaches.pastedumper import Pastebin_Dumper
 from email_osg.modules.breaches.hudsonrock import Cavalier
 from email_osg.emails_gen import Email_Gen
 
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 Title("Email Tracker (Osint)")
 
 Slow(osint_banner)
@@ -30,12 +36,12 @@ Slow(osint_banner)
 async def perform_search(target):
     EMAIL_REGEX = '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$'
     if re.match(EMAIL_REGEX, target):
-        print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} Information Recovery..{reset}")
-        print(f"{BEFORE + current_time_hour() + AFTER} {INFO} Leak Search..\n{reset}")
+        print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('tool_infos_recovery')}{reset}")
+        print(f"{BEFORE + current_time_hour() + AFTER} {INFO} {tr('LeakSearch')}\n{reset}")
         await Pastebin_Dumper(target).paste_check()
         print()
         await Cavalier(target).loader()
-        print(f"\n\n{BEFORE + current_time_hour() + AFTER} {INFO} Account search..\n{reset}")
+        print(f"\n\n{BEFORE + current_time_hour() + AFTER} {INFO} {tr('AccountSearch')}\n{reset}")
         await adobe(target)
         await chess(target)
         deezer(target)
@@ -54,20 +60,20 @@ async def perform_search(target):
         print(f"\n\n{BEFORE + current_time_hour() + AFTER} {INFO} Email generation..\n{reset}")
         Email_Gen(target).printer()
     else:
-        print(f"{primary}>{secondary} The target isn't an email.")
+        print(f"{primary}>{secondary} {tr('NotEmail')}")
 
 async def main():
     email = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} Email -> {reset}")
     Censored(email)
     print(f"""
-{secondary}[{primary}01{secondary}] {primary}->{secondary} Search email (breaches, pastes, accounts)
+{secondary}[{primary}01{secondary}] {primary}->{secondary} {tr('DataBreachSearch')}
     """)
-    choice = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} Search Type -> {reset}")
+    choice = input(f"\n{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('SearchType')} -> {reset}")
 
     if choice in ['1', '01']:
         await perform_search(email)
     else:
-        print(f"{primary}>{secondary} Invalid choice.")
+        print(f"{primary}>{secondary} {tr('ErrorChoiceStart')}")
 
     Continue()
     Reset()
@@ -79,4 +85,4 @@ if __name__ == '__main__':
     if py_version >= py_require:
         asyncio.run(main())
     else:
-        exit(f"{primary}>{secondary} This script doesn't work with Python version lower than 3.10.")
+        exit(f"{primary}>{secondary} {tr('Only3.12')}")

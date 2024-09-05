@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     from json import *
     import requests
@@ -15,8 +22,7 @@ except Exception as e:
 Title("Get Your Ip")
 
 try:
-    print(f"\n{BEFORE + current_time_hour() + AFTER} {INFO} Your Ip is not sent to anyone.")
-    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} Search your Ip..")
+    print(f"\n{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('IpSearch')}")
     try:
         hostname_pc = socket.gethostname()
     except:
@@ -62,12 +68,12 @@ try:
             ip_address_ipv6 = "None"
 
     print(f"""
-    {INFO_ADD} Pc Hostname      : {secondary}{hostname_pc}{primary}
-    {INFO_ADD} Pc Username      : {secondary}{username_pc}{primary}
-    {INFO_ADD} Pc DisplayName   : {secondary}{displayname_pc}{primary}
-    {INFO_ADD} Ip Public [ipv4] : {secondary}{ip_address_public}{primary}
-    {INFO_ADD} Ip Local  [ipv4] : {secondary}{ip_address_local}{primary}
-    {INFO_ADD} Ipv6             : {secondary}{ip_address_ipv6}{primary}
+  {INFO_ADD} {tr('PCHostname')}      : {secondary}{hostname_pc}{primary}
+  {INFO_ADD} {tr('PCUsername')}    : {secondary}{username_pc}{primary}
+  {INFO_ADD} {tr('PCDisplayName')}   : {secondary}{displayname_pc}{primary}
+  {INFO_ADD} {tr('IpPublic')} : {secondary}{ip_address_public}{primary}
+  {INFO_ADD} {tr('Iplocal')} : {secondary}{ip_address_local}{primary}
+  {INFO_ADD} {tr('Ipv6')}               : {secondary}{ip_address_ipv6}{primary}
     """)
 
     Continue()

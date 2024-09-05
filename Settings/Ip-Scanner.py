@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import requests
     import subprocess
@@ -58,7 +65,7 @@ try:
                 result = sock.connect_ex((ip, port))
                 if result == 0:
                     protocol = identify_protocol(ip, port)
-                    print(f"{BEFORE + current_time_hour() + AFTER} {ADD} Port: {secondary}{port}{primary} Status: {secondary}Open{primary} Protocol: {secondary}{protocol}{primary}")
+                    print(f"{BEFORE + current_time_hour() + AFTER} {ADD} Port: {secondary}{port}{primary} Status: {secondary}Open{primary} {tr('Protocol')}: {secondary}{protocol}{primary}")
                 sock.close()
             except:
                 pass
@@ -134,14 +141,14 @@ try:
             context = ssl.create_default_context()
             with context.wrap_socket(sock, server_hostname=ip) as ssock:
                 cert = ssock.getpeercert()
-                print(f"{BEFORE + current_time_hour() + AFTER} {ADD} SSL Certificate: {secondary}{cert}{primary}")
+                print(f"{BEFORE + current_time_hour() + AFTER} {ADD} {tr('SSLCertifOn')} {secondary}{cert}{primary}")
         except Exception as e:
-            print(f"{BEFORE + current_time_hour() + AFTER} {ADD} SSL Certificate Check Failed: {secondary}{e}{primary}")
+            print(f"{BEFORE + current_time_hour() + AFTER} {ADD} {tr('SSLCertifOff')} {secondary}{e}{primary}")
 
 
     Slow(scan_banner)
     ip = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Ip -> {reset}")
-    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} Information Recovery..{reset}")
+    print(f"{BEFORE + current_time_hour() + AFTER} {WAIT} {tr('tool_infos_recovery')}{reset}")
     print(f"{BEFORE + current_time_hour() + AFTER} {ADD} Ip: {secondary}{ip}{primary}")
     ip_type(ip)
     ip_ping(ip)

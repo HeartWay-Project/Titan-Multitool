@@ -1,11 +1,18 @@
 from Config.Config import *
 from Config.Util import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 import os
 import re
 
-token = input(f"\n{INPUT} Your Bot Token -> {reset}")
-channel_id = input(f"\n{INPUT} Your channel ID -> {reset}")
-output_filename = input(f"\n{INPUT} File Name -> {reset}")
+token = input(f"\n{INPUT} {tr('TokenBot')} -> {reset}")
+channel_id = input(f"\n{INPUT} {tr('ChannelIDRAT')} -> {reset}")
+output_filename = input(f"\n{INPUT} {tr('FileName')} -> {reset}")
 
 output_filename += '.py'
 

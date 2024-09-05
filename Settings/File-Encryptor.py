@@ -1,5 +1,11 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 try:
     from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
@@ -39,22 +45,22 @@ def encrypt_file(file_content, password):
 
 try:
     Slow(f"""{encrypted_banner}
-{secondary}[{primary}01{secondary}] {primary}->{secondary} AES (Recommended)
+{secondary}[{primary}01{secondary}] {primary}->{secondary} AES 
     """)
 
-    choice = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Encryption Method -> {reset}")
+    choice = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('CryptMethod')} -> {reset}")
 
     if choice not in ['1', '01']:
         ErrorChoice()
 
-    file_path = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Path to file to Encrypt -> {secondary}")
-    password = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Password for Encryption -> {secondary}")
+    file_path = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('PathFileEncrypt')} -> {secondary}")
+    password = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('PasswdCrypt')} -> {secondary}")
 
     try:
         with open(file_path, 'rb') as file:
             file_content = file.read()
     except Exception as e:
-        print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error reading file: {e}")
+        print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorReadFile')}: {e}")
         raise e
 
     encrypted_content = encrypt_file(file_content, password)
@@ -68,9 +74,9 @@ try:
             with open(encrypted_file_path, 'wb') as file:
                 file.write(encrypted_content)
             
-            print(f"{BEFORE + current_time_hour() + AFTER} {ADD} Encrypted file content saved to {encrypted_file_path}{reset}")
+            print(f"{BEFORE + current_time_hour() + AFTER} {ADD} {tr('SaveFileEncrypt')} {encrypted_file_path}{reset}")
         except Exception as e:
-            print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error saving encrypted file content: {e}")
+            print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorEncryptFile')} {e}")
 
         Continue()
         Reset()

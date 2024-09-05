@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import string
     import requests
@@ -12,13 +19,13 @@ except Exception as e:
 Title("Discord Webhook Generator")
 
 try:
-    webhook = input(f"{color.RED}\n{INPUT} Webhook ? (y/n) -> {color.RESET}")
-    if webhook in ['y', 'Y', 'Yes', 'yes', 'YES']:
-        webhook_url = input(f"{color.RED}{INPUT} Webhook URL -> {color.RESET}")
+    webhook = input(f"{color.RED}\n{INPUT} {tr('WebhookYN')} -> {color.RESET}")
+    if webhook in ['y', 'Y', 'Yes', 'yes', 'YES', 'o', 'O', 'Oui', 'oui', 'OUI']:
+        webhook_url = input(f"{color.RED}{INPUT} {tr('URLWebhook')} -> {color.RESET}")
         CheckWebhook(webhook_url)
 
     try:
-        threads_number = int(input(f"{INPUT} Threads Number -> {color.RESET}"))
+        threads_number = int(input(f"{INPUT} {tr('ThreadsNumber')} -> {color.RESET}"))
     except:
         ErrorNumber()
 
@@ -55,13 +62,13 @@ try:
                     }
                     }
                     send_webhook(embed_content)
-                    print(f"{valid}[{secondary}{current_time_hour()}{valid}] {GEN_VALID} Status:  {color.WHITE}Valid{color.GREEN}  | Webhook: {color.WHITE}{webhook_test_code}{color.GREEN}")
+                    print(f"{valid}[{secondary}{current_time_hour()}{valid}] {GEN_VALID} Status:  {secondary}Valid{color.GREEN}  | Webhook: {secondary}{webhook_test_code}{color.GREEN}")
                 else:
-                    print(f"{valid}[{secondary}{current_time_hour()}{valid}] {GEN_VALID} Status:  {color.WHITE}Valid{color.GREEN}  | Webhook: {color.WHITE}{webhook_test_code}{color.GREEN}")
+                    print(f"{valid}[{secondary}{current_time_hour()}{valid}] {GEN_VALID} Status:  {secondary}Valid{color.GREEN}  | Webhook: {secondary}{webhook_test_code}{color.GREEN}")
             else:
-                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {GEN_INVALID} Status: {color.WHITE}Invalid{color.RED} | Webhook: {color.WHITE}{webhook_test_code}{color.RED}")
+                print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {GEN_INVALID} Status: {secondary}Invalid{color.RED} | Webhook: {secondary}{webhook_test_code}{color.RED}")
         except:
-            print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {GEN_INVALID} Status: {color.WHITE}Error{color.RED} | Webhook: {color.WHITE}{webhook_test_code}{color.RED}")
+            print(f"{invalid}[{secondary}{current_time_hour()}{invalid}] {GEN_INVALID} Status: {secondary}{tr('Error')}{color.RED} | Webhook: {secondary}{webhook_test_code}{color.RED}")
 
     def request():
         threads = []

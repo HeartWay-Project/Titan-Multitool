@@ -8,6 +8,8 @@ except Exception as e:
 
 Title("Discord Webhook Info")
 
+BEFOREINFO = f"{secondary}[{primary}+{secondary}]{primary}"
+
 try:
     def info_webhook(webhook):
             headers = {
@@ -18,33 +20,33 @@ try:
             webhook_info = response.json()
             print(f"{color.RED}\nInformation Webhook:")
 
-            print(f"{color.WHITE}[{color.RED}+{color.WHITE}]{color.RED} ID      : {color.WHITE}", webhook_info['id'])
-            print(f"{color.WHITE}[{color.RED}+{color.WHITE}]{color.RED} Token   : {color.WHITE}", webhook_info['token'])
-            print(f"{color.WHITE}[{color.RED}+{color.WHITE}]{color.RED} Name    : {color.WHITE}", webhook_info['name'])
-            print(f"{color.WHITE}[{color.RED}+{color.WHITE}]{color.RED} Avatar  : {color.WHITE}", webhook_info['avatar'])
-            print(f"{color.WHITE}[{color.RED}+{color.WHITE}]{color.RED} Type    : {color.WHITE}", "bot" if webhook_info['type'] == 1 else "webhook utilisateur")
-            print(f"{color.WHITE}[{color.RED}+{color.WHITE}]{color.RED} Channel ID : {color.WHITE}", webhook_info['channel_id'])
-            print(f"{color.WHITE}[{color.RED}+{color.WHITE}]{color.RED} Server ID  : {color.WHITE}", webhook_info['guild_id'])
+            print(f"{BEFOREINFO} ID      : {secondary}", webhook_info['id'])
+            print(f"{BEFOREINFO} Token   : {secondary}", webhook_info['token'])
+            print(f"{BEFOREINFO} Name    : {secondary}", webhook_info['name'])
+            print(f"{BEFOREINFO} Avatar  : {secondary}", webhook_info['avatar'])
+            print(f"{BEFOREINFO} Type    : {secondary}", "bot" if webhook_info['type'] == 1 else "webhook utilisateur")
+            print(f"{BEFOREINFO} Channel ID : {secondary}", webhook_info['channel_id'])
+            print(f"{BEFOREINFO} Server ID  : {secondary}", webhook_info['guild_id'])
 
             print(f"{color.RED}\nUser information associated with the Webhook:")
             if 'user' in webhook_info:
                 user_info = webhook_info['user']
 
-                print(f"{color.WHITE}[{color.RED}+{color.WHITE}]{color.RED} ID          : {color.WHITE}", user_info['id'])
-                print(f"{color.WHITE}[{color.RED}+{color.WHITE}]{color.RED} Name        : {color.WHITE}", user_info['username'])
-                print(f"{color.WHITE}[{color.RED}+{color.WHITE}]{color.RED} DisplayName : {color.WHITE}", user_info['global_name'])
-                print(f"{color.WHITE}[{color.RED}+{color.WHITE}]{color.RED} Number      : {color.WHITE}", user_info['discriminator'])
-                print(f"{color.WHITE}[{color.RED}+{color.WHITE}]{color.RED} Avatar      : {color.WHITE}", user_info['avatar'])
-                print(f"{color.WHITE}[{color.RED}+{color.WHITE}]{color.RED} Flags       : {color.WHITE}", user_info['flags'], " Publique:", user_info['public_flags'])
-                print(f"{color.WHITE}[{color.RED}+{color.WHITE}]{color.RED} Color       : {color.WHITE}", user_info['accent_color'])
-                print(f"{color.WHITE}[{color.RED}+{color.WHITE}]{color.RED} Decoration  : {color.WHITE}", user_info['avatar_decoration_data'])
-                print(f"{color.WHITE}[{color.RED}+{color.WHITE}]{color.RED} Banner      : {color.WHITE}", user_info['banner_color'])
+                print(f"{BEFOREINFO} ID          : {secondary}", user_info['id'])
+                print(f"{BEFOREINFO} Name        : {secondary}", user_info['username'])
+                print(f"{BEFOREINFO} DisplayName : {secondary}", user_info['global_name'])
+                print(f"{BEFOREINFO} Number      : {secondary}", user_info['discriminator'])
+                print(f"{BEFOREINFO} Avatar      : {secondary}", user_info['avatar'])
+                print(f"{BEFOREINFO} Flags       : {secondary}", user_info['flags'], " Publique:", user_info['public_flags'])
+                print(f"{BEFOREINFO} Color       : {secondary}", user_info['accent_color'])
+                print(f"{BEFOREINFO} Decoration  : {secondary}", user_info['avatar_decoration_data'])
+                print(f"{BEFOREINFO} Banner      : {secondary}", user_info['banner_color'])
                 print("")
             else:
                 print("\nNone.")
 
 
-    webhook_url = input(f"{color.RED}\n{INPUT} Webhook URL -> {color.RESET}")
+    webhook_url = input(f"{primary}\n{INPUT} Webhook URL -> {reset}")
     CheckWebhook(webhook_url)
     info_webhook(webhook_url)
     Continue()

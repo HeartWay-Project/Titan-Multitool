@@ -1,5 +1,12 @@
 from Config.Util import *
 from Config.Config import *
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
+
 try:
     import webbrowser
 except Exception as e:
@@ -134,26 +141,26 @@ def display_links(category):
             {w}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
         """)
     else:
-        Slow(f"\n{ERROR} {w}{primary}Option non valide.{w}")
+        Slow(f"\n{ERROR} {w}{primary}{tr('ErrorChoice')}{w}")
 
 def main():
     Title("Dark Web Links")
     while True:
         try:
             display_menu()
-            choice = input(f"{INPUT} Choose a category -> ")
+            choice = input(f"{INPUT} {tr('Choice')} -> ")
             
             if choice.isdigit():
                 choice = int(choice)
                 if choice == 0:
-                    Slow(f"{color.WHITE}Quitting...{color.RESET}")
-                    break
+                    Continue()
+                    Reset()
                 elif 1 <= choice <= 9:
                     display_links(choice)
                 else:
-                    Slow(f"\n{ERROR} {primary}Option non valide.\n")
+                    Slow(f"\n{ERROR} {primary}{tr('InvalidOption')}\n")
             else:
-                Slow(f"\n{ERROR} {primary}Please enter a valid number.\n")
+                Slow(f"\n{ERROR} {primary}{tr('InvalidNumber')}\n")
 
             Continue()
             Reset()

@@ -3,6 +3,12 @@ from Config.Config import *
 import requests
 import re
 import sys
+from Config.Translates import *
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 def validate_url(url):
     regex = re.compile(
@@ -38,7 +44,7 @@ def get_api_key(filepath):
         with open(filepath, 'r') as file:
             return file.read().strip()
     except FileNotFoundError:
-        print(f"{ERROR} Error : The file '{filepath}' could not be found.")
+        print(f"{ERROR} {tr('Error_file_not_found')}.")
         Continue()
         Reset
     except Exception as e:
@@ -50,14 +56,14 @@ def main():
     api_key_path = "2-Input/FileCheck/apikey.txt"
     api_key = get_api_key(api_key_path)
 
-    url = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} Enter a URL to check -> {reset}").strip()
+    url = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('URL_to_check')} -> {reset}").strip()
         
     if validate_url(url):
         positives, total = check_url(url, api_key)
         if positives is not None:
-            print(f"{INFO} URL : {reset}{url} - {primary}{positives} / {total} scanners detected this URL as malicious.")
+            print(f"{INFO} URL : {reset}{url} - {primary}{positives} / {total} {tr('Malicious_URL')}.")
         else:
-            print(f"\n{BEFORE + current_time_hour() + AFTER} {INFO} No results found for this URL.")
+            print(f"\n{BEFORE + current_time_hour() + AFTER} {INFO} {tr('No_found_for_url')}.")
             Continue()
             Reset()
     else:

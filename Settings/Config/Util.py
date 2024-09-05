@@ -1,4 +1,6 @@
 from .Config import *
+from .Translates import *
+
 try:
     import colorama
     import ctypes
@@ -22,14 +24,15 @@ avatar_webhook = "https://cdn.discordapp.com/attachments/1271668100856676352/127
 colorama.init()
 color = colorama.Fore
 
-# Initial colors mapped to their roles
+
 primary = color.BLUE
 secondary = color.WHITE
-valid = color.GREEN      # Valid state (valid)
-invalid = color.RED      # Invalid state (invalid)
-reset = color.RESET      # Reset color
+valid = color.GREEN
+invalid = color.RED
+reset = color.RESET
+yellow = color.YELLOW
 
-# Function to change color dynamically based on role
+
 def change_color(role, new_color):
     global primary, secondary, valid, invalid
     if role == 'primary':
@@ -43,7 +46,7 @@ def change_color(role, new_color):
     else:
         print("Invalid role name")
 
-# List of available color options
+
 available_colors = [
     ("RED", color.RED),
     ("GREEN", color.GREEN),
@@ -60,6 +63,11 @@ def display_current_colors():
     print(f"{secondary}Secondary: {secondary}Secondary{reset}")
     print(f"{valid}Valid: {valid}Valid{reset}")
     print(f"{invalid}Invalid: {invalid}Invalid{reset}")
+
+current_language = LANGUAGE
+
+def tr(key):
+    return translations[current_language].get(key, key)
 
 try: username_pc = os.getlogin()
 except: username_pc = "username"
@@ -137,79 +145,79 @@ def Slow(texte):
         time.sleep(delai)
 
 def Continue():
-    input(f"{BEFORE + current_time_hour() + AFTER} {INFO} Press to continue -> " + reset)
+    input(f"{BEFORE + current_time_hour() + AFTER} {INFO} {tr('Continue')} -> " + reset)
 
 def Error(e):
-    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error: {secondary}{e}", reset)
+    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('Error')} {secondary}{e}", reset)
     Continue()
     Reset()
 
 def ErrorChoiceStart():
-    print(f"\n{BEFORE + current_time_hour() + AFTER} {ERROR} Invalid Choice !", reset)
+    print(f"\n{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorChoiceStart')}", reset)
     time.sleep(1)
 
 def ErrorChoice():
-    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Invalid Choice !", reset)
-    time.sleep(3)
+    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorChoice')}", reset)
+    time.sleep(2)
     Reset()
 
 def ErrorId():
-    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Invalid ID !", reset)
-    time.sleep(3)
+    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorId')}", reset)
+    time.sleep(2)
     Reset()
 
 def ErrorUrl():
-    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Invalid URL !", reset)
-    time.sleep(3)
+    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorUrl')}", reset)
+    time.sleep(2)
     Reset()
 
 def ErrorResponse():
-    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Invalid Response !", reset)
-    time.sleep(3)
+    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorResponse')}", reset)
+    time.sleep(2)
     Reset()
 
 def ErrorEdge():
-    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Edge not installed or driver not up to date !", reset)
-    time.sleep(3)
+    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorEdge')}", reset)
+    time.sleep(2)
     Reset()
 
 def ErrorToken():
-    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Invalid Token !", reset)
-    time.sleep(3)
+    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorToken')}", reset)
+    time.sleep(2)
     Reset()
     
 def ErrorNumber():
-    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Invalid Number !", reset)
-    time.sleep(3)
+    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorNumber')}", reset)
+    time.sleep(2)
     Reset()
 
 def ErrorWebhook():
-    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Invalid Webhook !", reset)
-    time.sleep(3)
+    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorWebhook')}", reset)
+    time.sleep(2)
     Reset()
 
 def ErrorCookie():
-    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Invalid Cookie !", reset)
-    time.sleep(3)
+    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorCookie')}", reset)
+    time.sleep(2)
     Reset()
 
 def ErrorUsername():
-    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Invalid Username !", reset)
-    time.sleep(3)
+    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorUsername')}", reset)
+    time.sleep(2)
     Reset()
 
 def ErrorModule(e):
-    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} Error Module (Restart Setup.bat): {secondary}{e}", reset)
+    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('ErrorModule')} {secondary}{e}", reset)
     Continue()
     Reset()
 
 def OnlyWindows():
-    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} This function is only available on Windows 10/11 !", reset)
+    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('OnlyWindows')}", reset)
     Continue()
     Reset()
 
 def OnlyLinux():
-    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} This function is only available on Linux !", reset)
+    print(f"{BEFORE + current_time_hour() + AFTER} {ERROR} {tr('OnlyLinux')}", reset)
     Continue()
     Reset()
 
@@ -274,11 +282,11 @@ def ChoiceMultiTokenDisord():
             token_discord_number += 1
         
         if token_discord_number == 0:
-            print(f"{INFO} No Token Discord in file: {secondary}{file_token_discord}{primary} Please add tokens to the file.")
+            print(f"{INFO} {tr('NoToken1')} {secondary}{file_token_discord}{primary} {tr('NoToken2')}")
             Continue()
             Reset()
         else:
-            print(f"{INFO} {secondary}{token_discord_number}{primary} Token Discord found ({secondary}{file_token_discord}{primary})")
+            print(f"{INFO} {secondary}{token_discord_number}{primary} {tr('TokenFound')} ({secondary}{file_token_discord}{primary})")
     
     try:
         num_tokens = int(input(f"{INPUT} How many token (max {token_discord_number}) -> {reset}"))
@@ -306,7 +314,7 @@ def ChoiceMultiTokenDisord():
     for _ in range(num_tokens):
         try:
             number += 1
-            selected_token_number = int(input(f"{color.BLUE}{INPUT} Token Number {number}/{num_tokens} -> {color.RESET}"))
+            selected_token_number = int(input(f"{color.BLUE}{INPUT} {tr('TokenNumber')} {number}/{num_tokens} -> {color.RESET}"))
         except:
             ErrorNumber()
         
@@ -327,7 +335,7 @@ def Choice1TokenDiscord():
                 'https://discord.com/api/v8/users/@me', headers={'Authorization': token}).json()
             username_discord = user['username']
             token_sensur = token[:-25] + '.' * 3
-            print(f"{secondary}[{primary}{token_number}{secondary}]{primary} -> {primary}Status: {secondary}{status}{primary} | User: {secondary}{username_discord}{primary} | Token: {secondary}{token_sensur}")
+            print(f"{secondary}[{primary}{token_number}{secondary}]{primary} -> {primary}Status: {secondary}{status}{primary} | {tr('User')}: {secondary}{username_discord}{primary} | Token: {secondary}{token_sensur}")
         else:
             status = f"Invalid"
             print(f"{secondary}[{primary}{token_number}{secondary}]{primary} -> {primary}Status: {secondary}{status}{primary} | {primary}Token: {secondary}{token}")
@@ -348,13 +356,13 @@ def Choice1TokenDiscord():
             CheckToken(token_discord_number, modified_token)
 
     if not tokens:
-        print(f"{INFO} No Token Discord in file: {secondary}{file_token_discord}{primary} Please add tokens to the file.")
+        print(f"{INFO} {tr('NoToken2')} {secondary}{file_token_discord}{primary} {tr('NoToken2')}")
         Continue()
         Reset()
         return None
 
     try:
-        selected_token_number = int(input(f"\n{color.BLUE}{INPUT} Token Number -> {color.RESET}"))
+        selected_token_number = int(input(f"\n{color.BLUE}{INPUT} {tr('TokenNumber')} -> {color.RESET}"))
     except:
         ErrorChoice()
 
@@ -403,7 +411,7 @@ def BrowserPrivate(site, search_bar=True, title="Navigateur Web"):
 
             if url:
                 self.load_url()
-            logo = "./Img/RedTiger_Icon.ico"
+            logo = "./Img/Titan_Icon.ico"
             self.setWindowIcon(QIcon(logo))
 
             self.setWindowFlags(Qt.Window | Qt.CustomizeWindowHint | Qt.WindowMinMaxButtonsHint | Qt.WindowCloseButtonHint)
@@ -438,7 +446,7 @@ def BrowserPrivate(site, search_bar=True, title="Navigateur Web"):
                 border: none;
             }
         """)
-        browser = WebBrowserApp(url=site, width=500, height=10, search_bar=search_bar, title=f"{name_tool} {version_tool} | {title}")  # Utiliser directement le titre
+        browser = WebBrowserApp(url=site, width=500, height=10, search_bar=search_bar, title=f"{name_tool} {version_tool} | {title}")
         browser.show()
         sys.exit(app.exec_())
 
