@@ -2,7 +2,7 @@ import os
 import sys
 import subprocess
 import webbrowser
-import pkg_ressources
+import pkg_resources
 
 def check_python_version():
     if sys.version_info >= (3, 12):
