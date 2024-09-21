@@ -1,10 +1,10 @@
 <img align="center" src="Img/Titan.png" width="100%">
 
-⭐ Titan-Multitool v1.1 ⭐
+⭐ Titan-Multitool v1.2 ⭐
  
 	N'oubliez pas de définir le repository sur "Star" pour rester à jour !
 
-📜・Description:
+<h1>📜・Description:</h1>
 
 	Titan-Multitool est une boîte à outils polyvalente et puissante, conçue pour améliorer votre productivité en développement, gestion de projets, et sécurité informatique. Développée par HeartWay, cette suite d'outils vous offre 78 fonctionnalités différentes pour simplifier vos tâches quotidiennes. Que vous soyez développeur, administrateur système ou un passionné de technologie, Titan-Multitool est votre allié incontournable.
 
