@@ -1,7 +1,9 @@
 <img align="center" src="Img/Titan.png" width="100%">
 
-⭐ Titan-Multitool v1.2 ⭐
- 
+<p>
+  <h3 align="center">⭐ Titan-Multitool v1.2 ⭐</h3>
+</p>
+
 	N'oubliez pas de définir le repository sur "Star" pour rester à jour !
 
 <h1>📜・Description:</h1>
