@@ -17,7 +17,7 @@ try:
     print()
     token = Choice1TokenDiscord()
 
-    print(tr('choose_browser'))
+    print(f"\n{secondary}[{primary}01{secondary}]{primary} -> Chrome (Windows / Linux)\n{secondary}[{primary}02{secondary}]{primary} -> Edge (Windows)\n{secondary}[{primary}03{secondary}]{primary} -> Firefox (Windows)\n")
     browser = input(f"{BEFORE + current_time_hour() + AFTER} {INPUT} {tr('input_browser')}{reset}")
 
     if browser in ['1', '01']:

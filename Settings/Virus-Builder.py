@@ -1,3 +1,4 @@
+from Config.Util import *
 import copy
 import customtkinter as ctk
 import logging
@@ -14,6 +15,8 @@ import time
 import zlib
 from PIL import Image
 from tools.sigthief import signfile, outputCert
+
+Slow(virus_banner)
 
 class App(ctk.CTk):
     def __init__(self):

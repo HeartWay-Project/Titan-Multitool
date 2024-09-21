@@ -1,13 +1,6 @@
 from .Util import *
-import colorama
 
 LANGUAGE = 'en'
-
-colorama.init()
-color = colorama.Fore
-
-primary = color.BLUE
-secondary = color.WHITE
 
 translations = {
     'en': {
@@ -89,9 +82,9 @@ translations = {
     	'76Metadata': "Metadata                      ",
     	'77Spoofer': "Spoofer                       ",
     	'78WinrarPremium': "Winrar Premium                ",
+        '79TiktokViews': "Tiktok Views Generator        ",
         'Soon': "Soon                          ",
         'title': "Discord Token Login",
-        'choose_browser': f"\n{secondary}[{primary}01{secondary}]{primary} -> Chrome (Windows / Linux)\n{secondary}[{primary}02{secondary}]{primary} -> Edge (Windows)\n{secondary}[{primary}03{secondary}]{primary} -> Firefox (Windows)\n",
         'input_browser': "Browser -> ",
         'starting': "{} Starting..",
         'ready': "{} Ready!",
@@ -164,10 +157,12 @@ translations = {
 	'SSLCertifOn': "SSL Certificate:",
 	'SSLCertifOff': "SSL Certificate Check Failed:",
 	'Protocol': "Protocol",
-	'PathToObfuscate': "Path of the file to obfuscate",
+	'PathToObf': "Path of the file to obfuscate",
 	'ObfSucces': "File successfully obfuscated in:",
+    'ObfY' : "Do you want to obfuscate the file? (y/n)",
 	'TokenBot': "Your Bot Token",
 	'ChannelIDRAT': "Your channel ID",
+    'RatSucces': "Rat successfully registred in",
 	'FileName': "File Name",
 	'VulnerabilityScan': "Looking for a vulnerability..",
 	'SQLVuln': "Vulnerability SQL:",
@@ -385,9 +380,9 @@ translations = {
     	'76Metadata': "Métadonnées                   ",
     	'77Spoofer': "Spoofer                       ",
     	'78WinrarPremium': "Winrar Premium                ",
+        '79TiktokViews': "Générateur de vues Tiktok                ",
         'Soon': "Bientôt                       ",
         'title': "Connexion Token Discord",
-        'choose_browser': f"\n{secondary}[{primary}01{secondary}]{primary} -> Chrome (Windows / Linux)\n{secondary}[{primary}02{secondary}]{primary} -> Edge (Windows)\n{secondary}[{primary}03{secondary}]{primary} -> Firefox (Windows)\n",
         'input_browser': "Navigateur -> ",
         'starting': "Démarrage de {}...",
         'ready': "{} Prêt !",
@@ -415,7 +410,7 @@ translations = {
 	'URL_to_check': "Entrez l'URL à vérifier",
 	'No_found_for_url': "Aucun résultat pour cette URL",
 	'Malicious_URL': "scanners ont détecté cette URL comme malveillante",
-	'Error_file_not_found': f"Erreur : le fichier {secondary}2-Input/FileCheck/apikey.txt{primary} n'a pas pu être trouvé",
+	'Error_file_not_found': "Erreur : le fichier {secondary}2-Input/FileCheck/apikey.txt{primary} n'a pas pu être trouvé",
 	'Continue': "Appuyez pour continuer",
 	'Error': "Erreur :",
 	'ErrorChoiceStart': "Choix Invalide !",
@@ -461,8 +456,10 @@ translations = {
 	'Protocol': "Protocole ",
 	'PathToObf': "Chemin du fichier à obfusquer",
 	'ObfSucces': "Fichier obfusqué avec succès dans :",
+    'ObfY' : "Voulez-vous obfusquer le fichier ? (o/n)",
 	'TokenBot': "Le Token de votre Bot",
 	'ChannelIDRAT': "L'ID du salon",
+    'RatSucces': "Rat enregistré avec succès dans",
 	'FileName': "Nom du Fichier",
 	'VulnerabilityScan': "À la recherche d'une vulnérabilité..",
 	'SQLVuln': "Vulnérabilité SQL :",
@@ -603,7 +600,6 @@ translations = {
     },
     'es': {
     'title': "Conexión Token Discord",
-    'choose_browser': f"\n{secondary}[{primary}01{secondary}]{primary} -> Chrome (Windows / Linux)\n{secondary}[{primary}02{secondary}]{primary} -> Edge (Windows)\n{secondary}[{primary}03{secondary}]{primary} -> Firefox (Windows)\n",
     'input_browser': "Navegador -> ",
     'starting': "Iniciando {}...",
     'ready': "{} ¡Listo!",
@@ -631,7 +627,7 @@ translations = {
     'URL_to_check': "Ingresa la URL para verificar",
     'No_found_for_url': "No se encontraron resultados para esta URL",
     'Malicious_URL': "escáneres detectaron esta URL como maliciosa",
-    'Error_file_not_found': f"Error: No se pudo encontrar el archivo {secondary}2-Input/FileCheck/apikey.txt{primary}",
+    'Error_file_not_found': "Error: No se pudo encontrar el archivo {secondary}2-Input/FileCheck/apikey.txt{primary}",
     'Continue': "Presiona para continuar",
     'Error': "Error:",
     'ErrorChoiceStart': "¡Opción inválida!",
@@ -677,8 +673,10 @@ translations = {
     'Protocol': "Protocolo",
     'PathToObf': "Ruta del archivo a ofuscar",
     'ObfSucces': "Archivo ofuscado con éxito en:",
+    'ObfY' : "¿Quieres ofuscar el archivo? (y/n)",
     'TokenBot': "El Token de tu Bot",
     'ChannelIDRAT': "El ID del canal",
+    'RatSucces': "Rata registrada exitosamente en",
     'FileName': "Nombre del archivo",
     'VulnerabilityScan': "Buscando vulnerabilidades...",
     'SQLVuln': "Vulnerabilidad SQL:",

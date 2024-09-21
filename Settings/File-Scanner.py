@@ -8,6 +8,8 @@ import os
 
 current_language = LANGUAGE
 
+Slow(scan_banner)
+
 def tr(key):
     return translations[current_language].get(key, key)
 

@@ -64,7 +64,6 @@ def main():
     while True:
         print(f"\n{secondary}[{primary}1{secondary}] {primary}{tr('EncodeMessage')}")
         print(f"{secondary}[{primary}2{secondary}] {primary}{tr('DecodeMessage')}")
-        print(f"{secondary}[{primary}3{secondary}] {primary}Quitter")
         choix = input(f"\n{INPUT} {primary}{tr('Chose')} -> {reset}")
 
         if choix == '1':
@@ -86,10 +85,6 @@ def main():
             
             message = decode_message_from_image(image_path)
             print(f"\n{BEFORE + current_time_hour() + AFTER} {INFO} {primary}{tr('DecodedMessage')} : {reset}{message}\n")
-            Continue()
-            Reset()
-
-        elif choix == '3':
             Continue()
             Reset()
 

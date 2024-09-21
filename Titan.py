@@ -8,13 +8,52 @@ def tr(key):
     return translations[current_language].get(key, key)
 
 try:
-   import colorama
+   import webbrowser
+   import re
 except:
    ErrorModule()
 
-colorama.init()
+try:
+    response = requests.get(url_config)
+    response.raise_for_status()
 
-popup_version = ""
+    match = re.search(r'version_tool\s*=\s*"([^"]+)"', response.text)
+    if match:
+        new_version = match.group(1)
+
+        if new_version != version_tool:
+            Clear()
+            print(f"{INFO} Please install the new version of the tool: {secondary + version_tool + primary} -> {secondary + new_version}")
+            
+            choice = input(f"{INFO} Do you want to: \n\n"
+                           f"{secondary}[{primary}1{secondary}] {primary}Download the new version \n"
+                           f"{secondary}[{primary}2{secondary}] {primary}View the download page \n"
+                           f"{secondary}[{primary}3{secondary}] {primary}Keep using the current version \n\n"
+                           f"Your Choice -> ")
+
+            if choice == '1':
+                print(f"{INFO} Downloading the new version...")
+                webbrowser.open(url_downloads)
+            elif choice == '2':
+                print(f"{INFO} Opening the download page...")
+                webbrowser.open(github_tool)
+            elif choice == '3':
+                print(f"{INFO} Continuing with the current version.")
+            else:
+                print(f"{INFO} Invalid choice, continuing with the current version.")
+            
+            popup_version = f"{primary}New Version: {secondary + version_tool + primary} -> {secondary + new_version}"
+        else:
+            popup_version = ""
+    else:
+        print(f"{INFO} No version found in the configuration file.")
+        popup_version = ""
+except requests.exceptions.RequestException as e:
+    print(f"{INFO} Failed to fetch the configuration: {e}")
+    popup_version = ""
+except AttributeError:
+    print(f"{INFO} Version extraction failed from the configuration.")
+    popup_version = ""
 
 option_01 = "Settings"
 option_02 = "Tool-Info"
@@ -89,12 +128,12 @@ option_70 = "Facebook-Downloader"
 option_71 = "Youtube-Downloader"
 option_72 = "TikTok-Downloader"
 option_73 = "Site-Downloader"
-option_74 = "Dark-Web-Links"
-option_75 = "Steganography"
-option_76 = "Metadata"
-option_77 = "Spoofer"
-option_78 = "Winrar-Premium"
-option_79 = "Soon"
+option_74 = "TikTok-Views"
+option_75 = "Dark-Web-Links"
+option_76 = "Steganography"
+option_77 = "Metadata"
+option_78 = "Spoofer"
+option_79 = "Winrar-Premium"
 option_80 = "Soon"
 option_81 = "Soon" 
 option_82 = "Soon"
@@ -256,12 +295,12 @@ menu3 = f"""                                                 {secondary}╔═�
    {primary}├{secondary}[{primary}61{secondary}]{primary}-{secondary} {tr('61RobloxCookieLogin')}{primary}├{secondary}[{primary}71{secondary}]{primary}-{secondary} {tr('71YoutubeDownloader')}{primary}├{secondary}[{primary}81{secondary}]{primary}-{secondary} {tr('Soon')}{primary}│
    {primary}├{secondary}[{primary}62{secondary}]{primary}-{secondary} {tr('62RobloxCookieInfo')}{primary}├{secondary}[{primary}72{secondary}]{primary}-{secondary} {tr('72TikTokDownloader')}{primary}├{secondary}[{primary}82{secondary}]{primary}-{secondary} {tr('Soon')}{primary}│
    {primary}├{secondary}[{primary}63{secondary}]{primary}-{secondary} {tr('63RobloxUserInfo')}{primary}├{secondary}[{primary}73{secondary}]{primary}-{secondary} {tr('73SiteDownloader')}{primary}├{secondary}[{primary}83{secondary}]{primary}-{secondary} {tr('Soon')}{primary}│
-   {primary}├{secondary}[{primary}64{secondary}]{primary}-{secondary} {tr('64RobloxIdInfo')}{primary}├{secondary}[{primary}74{secondary}]{primary}-{secondary} {tr('74DarkWebLinks')}{primary}├{secondary}[{primary}84{secondary}]{primary}-{secondary} {tr('Soon')}{primary}│
-   {primary}├{secondary}[{primary}65{secondary}]{primary}-{secondary} {tr('65RobloxRobuxGenerator')}{primary}├{secondary}[{primary}75{secondary}]{primary}-{secondary} {tr('75Steganography')}{primary}├{secondary}[{primary}85{secondary}]{primary}-{secondary} {tr('Soon')}{primary}│
-   {primary}├{secondary}[{primary}66{secondary}]{primary}-{secondary} {tr('66FileEncryptor')}{primary}├{secondary}[{primary}76{secondary}]{primary}-{secondary} {tr('76Metadata')}{primary}├{secondary}[{primary}86{secondary}]{primary}-{secondary} {tr('Soon')}{primary}│
-   {primary}├{secondary}[{primary}67{secondary}]{primary}-{secondary} {tr('67FileDecryptor')}{primary}├{secondary}[{primary}77{secondary}]{primary}-{secondary} {tr('77Spoofer')}{primary}├{secondary}[{primary}87{secondary}]{primary}-{secondary} {tr('Soon')}{primary}│
-   {primary}├{secondary}[{primary}68{secondary}]{primary}-{secondary} {tr('68FileConverter')}{primary}├{secondary}[{primary}78{secondary}]{primary}-{secondary} {tr('78WinrarPremium')}{primary}├{secondary}[{primary}88{secondary}]{primary}-{secondary} {tr('Soon')}{primary}│
-   {primary}├{secondary}[{primary}69{secondary}]{primary}-{secondary} {tr('69FileScanner')}{primary}├{secondary}[{primary}79{secondary}]{primary}-{secondary} {tr('Soon')}{primary}├{secondary}[{primary}89{secondary}]{primary}-{secondary} {tr('Soon')}{primary}│
+   {primary}├{secondary}[{primary}64{secondary}]{primary}-{secondary} {tr('64RobloxIdInfo')}{primary}├{secondary}[{primary}74{secondary}]{primary}-{secondary} {tr('79TiktokViews')}{primary}├{secondary}[{primary}84{secondary}]{primary}-{secondary} {tr('Soon')}{primary}│
+   {primary}├{secondary}[{primary}65{secondary}]{primary}-{secondary} {tr('65RobloxRobuxGenerator')}{primary}├{secondary}[{primary}75{secondary}]{primary}-{secondary} {tr('74DarkWebLinks')}{primary}├{secondary}[{primary}85{secondary}]{primary}-{secondary} {tr('Soon')}{primary}│
+   {primary}├{secondary}[{primary}66{secondary}]{primary}-{secondary} {tr('66FileEncryptor')}{primary}├{secondary}[{primary}76{secondary}]{primary}-{secondary} {tr('75Steganography')}{primary}├{secondary}[{primary}86{secondary}]{primary}-{secondary} {tr('Soon')}{primary}│
+   {primary}├{secondary}[{primary}67{secondary}]{primary}-{secondary} {tr('67FileDecryptor')}{primary}├{secondary}[{primary}77{secondary}]{primary}-{secondary} {tr('76Metadata')}{primary}├{secondary}[{primary}87{secondary}]{primary}-{secondary} {tr('Soon')}{primary}│
+   {primary}├{secondary}[{primary}68{secondary}]{primary}-{secondary} {tr('68FileConverter')}{primary}├{secondary}[{primary}78{secondary}]{primary}-{secondary} {tr('77Spoofer')}{primary}├{secondary}[{primary}88{secondary}]{primary}-{secondary} {tr('Soon')}{primary}│
+   {primary}├{secondary}[{primary}69{secondary}]{primary}-{secondary} {tr('69FileScanner')}{primary}├{secondary}[{primary}79{secondary}]{primary}-{secondary} {tr('78WinrarPremium')}{primary}├{secondary}[{primary}89{secondary}]{primary}-{secondary} {tr('Soon')}{primary}│
    {primary}├{secondary}[{primary}70{secondary}]{primary}-{secondary} {tr('70FacebookDownloader')}{primary}├{secondary}[{primary}80{secondary}]{primary}-{secondary} {tr('Soon')}{primary}├{secondary}[{primary}90{secondary}]{primary}-{secondary} {tr('Soon')}{primary}│
    ├────────────────────────────────────┼────────────────────────────────────┼────────────────────────────────────┤
    │{secondary}[{primary}A{secondary}]{primary}- {option_previous_txt} │                                    │{secondary}[{primary}E{secondary}]{primary}- {option_next_txt} │
@@ -290,7 +329,7 @@ def Menu():
 
    banner = f"""{popup_version}{primary}                             
 {primary}                                     ███      ▄█      ███        ▄████████ ███▄▄▄▄       ┌─────────────────────────────┐
-{primary}                                 ▀█████████▄ ███  ▀█████████▄   ███    ███ ███▀▀▀██▄     │ {secondary}{github_tool} {primary}│
+{primary}                                 ▀█████████▄ ███  ▀█████████▄   ███    ███ ███▀▀▀██▄     │ {secondary}github.com/HeartWay-Project {primary}│
 {primary}                                    ▀███▀▀██ ███▌    ▀███▀▀██   ███    ███ ███   ███     └─────────────────────────────┘
 {primary}                                     ███   ▀ ███▌     ███   ▀   ███    ███ ███   ███ 
 {primary}                                     ███     ███▌     ███     ▀███████████ ███   ███ 

@@ -18,7 +18,7 @@ try:
 
             response = requests.get(webhook_url, headers=headers)
             webhook_info = response.json()
-            print(f"{color.RED}\nInformation Webhook:")
+            print(f"{primary}\nInformation Webhook:")
 
             print(f"{BEFOREINFO} ID      : {secondary}", webhook_info['id'])
             print(f"{BEFOREINFO} Token   : {secondary}", webhook_info['token'])
@@ -28,7 +28,7 @@ try:
             print(f"{BEFOREINFO} Channel ID : {secondary}", webhook_info['channel_id'])
             print(f"{BEFOREINFO} Server ID  : {secondary}", webhook_info['guild_id'])
 
-            print(f"{color.RED}\nUser information associated with the Webhook:")
+            print(f"{primary}\nUser information associated with the Webhook:")
             if 'user' in webhook_info:
                 user_info = webhook_info['user']
 

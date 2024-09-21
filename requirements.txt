@@ -48,3 +48,4 @@ tqdm
 uuid
 wmi
 yt_dlp
+gputil
