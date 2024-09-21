@@ -4,126 +4,226 @@
   <h3 align="center">⭐ Titan-Multitool v1.2 ⭐</h3>
 </p>
 
-	N'oubliez pas de définir le repository sur "Star" pour rester à jour !
-
 <h1>📜・Description:</h1>
 
-	Titan-Multitool est une boîte à outils polyvalente et puissante, conçue pour améliorer votre productivité en développement, gestion de projets, et sécurité informatique. Développée par HeartWay, cette suite d'outils vous offre 78 fonctionnalités différentes pour simplifier vos tâches quotidiennes. Que vous soyez développeur, administrateur système ou un passionné de technologie, Titan-Multitool est votre allié incontournable.
+	Titan-Multitool est une boîte à outils polyvalente et puissante, conçue pour améliorer votre productivité en développement, gestion de projets, et sécurité informatique. Développée par HeartWay, cette suite d'outils vous offre 79 fonctionnalités différentes pour simplifier vos tâches quotidiennes. Que vous soyez développeur, administrateur système ou un passionné de technologie, Titan-Multitool est votre allié incontournable.
 
-	👨‍💻 -> Développé en Python 3.12.
+<p>
+    Certains scripts comme ceux présents dans "<a href="https://github.com/HeartWay-Project/Titan-Multitool/tree/main/Settings/FileDetectedByAntivirus">Settings/Program/FileDetectedByAntivirus</a>" <strong>sont détectés par les antivirus</strong> mais ce ne sont pas des <strong>malwares</strong>.
 
-	🌍 -> Outil en anglais et bientôt dans une multitude d'autres langues.
+  👨‍💻 -> Développé en <strong>Python 3.12</strong>.<br>
+  🌍 -> Tool en <strong>English, Français et Espagnol</strong>.<br>
+  💻 -> Compatible avec <strong>Windows</strong> et bientôt <strong>Linux</strong>.<br>
+  🔎 -> Pas de <strong>malware</strong> ni de <strong>backdoor</strong>.<br>
+  📂 -> <strong>Open Source</strong> garantissant l'absence de programmes malveillants.<br>
+  🔄 -> <strong>Mises à jour fréquentes</strong>.<br>
+  💰 -> <strong>Entièrement gratuit</strong> pour tous.<br>
+</p>
 
-	💻 -> Compatible avec Windows et bientôt Linux.
+<h1>⭐・Features: </h1>
 
-	🔎 -> Pas de malware ni de backdoor.
+<p>
+  <h3 align="center">Titan-Multitool vous offre une large gamme de fonctionnalités réparties en différentes catégories :</h3>
+</p>
 
-	📂 -> Open Source pour vérification, garantissant l'absence de programmes malveillants.
+```
+┌ Paramètres et Informations
+│
+├ Scan et Vérification
+│
+├ Informations sur les IP et Réseaux
+│
+├ Vulnérabilité et Sécurité
+│
+├ Doxing et Suivi d'Informations
+│
+├ Gestion des Mots de Passe
+│
+├ Fonctionnalités Discord
+│
+├ Fonctionnalités Roblox
+│
+├ Chiffrement, Décryptage et Conversion de Fichiers
+│
+├ Téléchargements et Génération de Contenu
+│
+├ Techniques de Dissimilation et Analyse de Métadonnées
+│
+└ Divers autres tools
+```
 
-	🔄 -> Mises à jour fréquentes.
+<h1>⚙️・Fonctions principales :</h1>
 
-	💰 -> Gratuit pour tous.
+```
+┌── ⚒️ - Titan MultiTool
+│   ├── Settings
+│   ├── Tool-Info
+│   └── Tool-Websites
+│
+├── 🕵️‍♂️ - Network Scanner
+│   ├── Sql-Vulnerability
+│   ├── Website-Info-Scanner
+│   ├── Website-Url-Scanner
+│   ├── URL-Checker
+│   ├── Ip-Scanner
+│   ├── Ip-Port-Scanner
+│   └── Ip-Pinger
+│
+├── 🔎 - Osint
+│   ├── Dox-Create
+│   ├── Dox-Tracker-(Osint)
+│   ├── Username-Tracker
+│   ├── Email-Tracker
+│   ├── Email-Info
+│   ├── Number-Info
+│   └── Ip-Info
+│
+├── 🔧 - Utilities
+│   ├── Phishing-Attack
+│   ├── Password-Encrypted
+│   ├── Password-Decrypted
+│   ├── Password-Checker
+│   ├── Password-Generator
+│   ├── Password-Generator-(Random)
+│   ├── Search-In-DataBase
+│   ├── Ip-Generator
+│   └── Dark-Web-Links
+│
+├── ☠️ - Virus Builder
+│   ├── Obfuscator
+│   ├── Virus-Builder
+│   ├── RAT-Builder
+│   ├── Archive-Cracker
+│   └── SMB-Cracker
+│
+├── 📞 - Discord Tools
+│   ├── Token Discord
+│   │   ├── Discord-Token-Info
+│   │   ├── Discord-Token-Nuker
+│   │   ├── Discord-Token-Joiner
+│   │   ├── Discord-Token-Leaver
+│   │   ├── Discord-Token-Login
+│   │   ├── Discord-Token-To-Id-And-Brute
+│   │   ├── Discord-Token-Server-Raid
+│   │   ├── Discord-Token-Spammer
+│   │   ├── Discord-Token-Delete-Friends
+│   │   ├── Discord-Token-Block-Friends
+│   │   ├── Discord-Token-Mass-Dm
+│   │   ├── Discord-Token-Delete-Dm
+│   │   ├── Discord-Token-Status-Changer
+│   │   ├── Discord-Token-Language-Changer
+│   │   ├── Discord-Token-House-Changer
+│   │   ├── Discord-Token-Theme-Changer
+│   │   └── Discord-Token-Generator
+│   │
+│   ├── Bot Discord
+│   │   ├── Discord-Bot-Server-Backup
+│   │   ├── Discord-Bot-Server-Nuker
+│   │   ├── Discord-Bot-Server-Invite
+│   │   └── Discord-Bot-Id-to-Invite
+│   │
+│   ├── Webhook Discord
+│   │   ├── Discord-Webhook-Info
+│   │   ├── Discord-Webhook-Delete
+│   │   ├── Discord-Webhook-Spammer
+│   │   └── Discord-Webhook-Generator
+│   │
+│   ├── Discord-Server-Info
+│   └── Discord-Nitro-Generator
+│
+├── 🎮 - Roblox Tools
+│   ├── Roblox-Cookie-Login
+│   ├── Roblox-Cookie-Info
+│   ├── Roblox-User-Info
+│   ├── Roblox-Id-Info
+│   └── Roblox-Robux-Generator
+│
+├── 🗂️ - File Tools
+│   ├── File-Encryptor
+│   ├── File-Decryptor
+│   ├── File-Converter
+│   └── File-Scanner
+│
+├── 📥 - Downloaders
+│   ├── Facebook-Downloader
+│   ├── Youtube-Downloader
+│   ├── TikTok-Downloader
+│   ├── Site-Downloader
+│   └── TikTok-Views
+│
+├── 🛠️ - Miscellaneous
+│   ├── Steganography
+│   ├── Metadata
+│   ├── Spoofer
+│   └── Winrar-Premium
+│
+└── 💻 - System Tools
+    └── Get-Your-Ip
 
-⭐・Features:
 
-	Titan-Multitool vous offre une large gamme de fonctionnalités réparties en différentes catégories :
+```
 
-⚙️・Fonctions Principales:
+<h1>・Nouveautés :</h1>
 
-	Info : Informations sur l'outil et son site web.
+```
+Amélioration de la traduction : Perfectionnement de la traduction et personnalisation du Tool.
+Améliorations du Virus et RAT Builder : Ajout de nouvelles fonctionnalités pour le rat builder, amélioration de l'interface et du fonctionnement du rat.
+Nouveau Tool : Tiktok Views qui permet d'automatiser l'ajout de vues tiktok par discord, a chaque fin de compteur cela va redemander des vues automatiquement.
+Quelques Améliorations supplémentaires.
+```
 
-	Parametres : Modification de l'apparence du Tool
+<h1>🔒・Requirements:</h1>
 
-	Obfuscation : Outil d'obfuscation.
+<h3>Windows:</h3>
 
-	R.A.T Discord : Un R.A.T Discord performant et fonctionnel avec les objets disponibles a l'achat.
+<p>
+- Installez <a href="https://www.python.org/downloads/">Python</a> avec les variables <a href="Img/Python_Path.png">PATH</a> .<br>
+- Windows 10 & 11 ou +
+</p>
 
-	Réseau : Scanners de vulnérabilité SQL, site web, IP, ports, etc.
+<h1>⏳・Installation:</h1>
 
-	OSINT : Création de dox, suivi de nom d'utilisateur, email, numéro de téléphone, etc.
+ <a href="https://github.com/HeartWay-Project/Titan-Multitool/archive/refs/heads/main.zip">Téléchargez "Titan-Multitool.zip" ICI</a>
+ 
+ <p>
+  
+```
+1 - Téléchargez "Titan-Multitool.zip".
+2 - Décompressez le dossier.
+3 - Lancez "Setup.bat" ou "Setup.py".
+```
+Or
+```
+1 - Ouvrez un terminal.
+2 - Écrivez git clone https://github.com/heartway/Titan-Multitool.git.
+3 - Écrivez "cd Titan-Multitool".
+4 - Écrivez "git pull"
+5 - Écrivez "python Setup.py".
+```
+</p>
 
-	Utilitaires : Attaques de phishing, décryptage de mots de passe, recherche dans une base de données, et bien d'autres.
+<h1>⚠️・Conditions d'utilisation :</h1>
 
-	Virus Builder : Création de logiciels malveillants (usage éducatif uniquement).
-
-	Discord Tools : Outils divers pour la gestion de comptes et de serveurs Discord.
-
-	Roblox Tools : Outils pour la gestion de comptes et d'informations Roblox.
-
- Nouveautées de la Mise à Jour :
-
-Traduction : *Le multitool est désormais disponible en français et en espagnol (version bêta).*
-
-Correction du Virus Builder : *Amélioration de la sortie du virus builder pour corriger des erreurs de génération dans le mauvais répertoire.*
-
-Amélioration du RAT Discord : *Le fonctionnement du RAT à été modifié afin de créer un nouveau fichier a la place de simplement lancer le fichier pour améliorer la discrétion du RAT.*
-
-Amélioration de la navigation : *Utilisation des touches "e" pour passer au menu suivant et "a" pour revenir au menu précédent, facilitant ainsi la navigation au maximum.*
-
-Prochaine mise à jour :
-
-Amélioration de la traduction : *Perfectionnement de la traduction et personnalisation du Tool.*
-
-Améliorations du Virus et RAT Builder :* Ajout de nouvelles fonctionnalités pour le virus builder et le rat builder.*
-
-Nouvelles fonctionnalités : *Ajout et amélioration d'autres tools.*
-
-🔒・Requirements:
-
-	Windows:
-
-
-	Installer Python avec les options PATH.
-
-	Windows 10 ou supérieur.
-
-	Linux:
-
-
-	Soon
-
-
-⏳・Installation:
-
-	Téléchargez "Titan-Multitool.zip" ici.
-
-	Décompressez le dossier.
-
-	Lancez "Setup.bat" ou "Setup.py".
-
-	Ou:
-
-	Ouvrez un terminal.
-
-	Écrivez git clone https://github.com/heartway/Titan-Multitool.git.
-
-	Écrivez cd Titan-Multitool.
-
-	Écrivez python Setup.py.
-
-⚠️・Conditions d'utilisation:
-
+<p>
 	Titan-Multitool a été développé uniquement à des fins éducatives. Ce projet a été créé avec de bonnes intentions et est destiné à un usage personnel uniquement. En choisissant d'utiliser Titan-Multitool, vous reconnaissez et acceptez l'entière responsabilité des conséquences pouvant résulter de vos actions.
+</p>
 
+<h1>💰・Donation:</h1>
 
-💰・Donation:
+<p>
+  
+  <strong>Adresse Paypal:</strong>
+  ``` 
+heartway.contact@gmail.com
+  ```
 
-	Adresse Bitcoin :
-	
-	
-	Soon
+</p>
 
-	Adresse Litecoin :
-	
-	
-	Soon
+<h2>🔗・Credits:</h2>
 
-🔗・Credits:
-
-	Discord: https://discord.gg/CnZ4nKp2re
-
-	Website: Heartway-commerce.odoo.com
-
-	Creator: HeartWay
-
-	Version: 1.0
+<p>
+  - <a href="https://discord.gg/CnZ4nKp2re">Discord</a><br>
+  - <a href="Heartway-commerce.odoo.com">Website</a><br>
+  - Creator: HeartWay<br>
+  - Version: 1.2
+</p>
