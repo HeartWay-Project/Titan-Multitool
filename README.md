@@ -1,3 +1,5 @@
+<img align="center" src="Img/Titan.png" width="100%">
+
 ⭐ Titan-Multitool v1.1 ⭐
  
 	N'oubliez pas de définir le repository sur "Star" pour rester à jour !
