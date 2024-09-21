@@ -168,7 +168,7 @@
 ```
 Amélioration de la traduction : Perfectionnement de la traduction et personnalisation du Tool.
 Améliorations du Virus et RAT Builder : Ajout de nouvelles fonctionnalités pour le rat builder, amélioration de l'interface et du fonctionnement du rat.
-Nouveau Tool : Tiktok Views qui permet d'automatiser l'ajout de vues tiktok par discord, a chaque fin de compteur cela va redemander des vues automatiquement.
+Nouveau Tool : Tiktok Views qui permet d'automatiser l'ajout de vues tiktok par zefoy, a chaque fin de compteur cela va redemander des vues automatiquement.
 Quelques Améliorations supplémentaires.
 ```
 
