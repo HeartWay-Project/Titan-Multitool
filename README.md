@@ -223,7 +223,7 @@ heartway.contact@gmail.com
 
 <p>
   - <a href="https://discord.gg/CnZ4nKp2re">Discord</a><br>
-  - <a href="Heartway-commerce.odoo.com">Website</a><br>
-  - Creator: HeartWay<br>
+  - <a href="Heartway-commerce.odoo.com">Site Web</a><br>
+  - Createur: HeartWay<br>
   - Version: 1.2
 </p>
