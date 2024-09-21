@@ -49,3 +49,6 @@ uuid
 wmi
 yt_dlp
 gputil
+random
+time
+platform

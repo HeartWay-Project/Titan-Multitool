@@ -2,7 +2,7 @@ import os
 import sys
 import subprocess
 import webbrowser
-import pkg_resources
+import importlib.util
 
 def check_python_version():
     if sys.version_info >= (3, 12):
@@ -38,20 +38,20 @@ def install_requirements():
             for line in req_file:
                 module = line.strip()
                 if module:
-                    try:
-                        # Vérifier si le module est déjà installé
-                        pkg_resources.get_distribution(module)
-                        print(f"Module '{module}' est déjà installé.")
-                    except pkg_resources.DistributionNotFound:
-                        # Si le module n'est pas installé, essayer de l'installer
+                    if not is_module_installed(module):
                         try:
                             subprocess.run([sys.executable, "-m", "pip", "install", module], check=True)
                             print(f"Module '{module}' installé avec succès.")
                         except subprocess.CalledProcessError:
                             print(f"Erreur lors de l'installation du module '{module}', mais on continue...")
+                    else:
+                        print(f"Module '{module}' est déjà installé.")
     else:
         print("Le fichier requirements.txt n'existe pas.")
         sys.exit(1)
+
+def is_module_installed(module_name):
+    return importlib.util.find_spec(module_name) is not None
 
 def open_github_page():
     url = "https://github.com/HeartWay-Project/Titan-Multitool"
